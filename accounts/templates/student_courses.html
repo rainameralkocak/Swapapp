@@ -1,0 +1,341 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+        }
+
+        /*smartbar*/
+        .left-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .date {
+            font: normal normal normal 14px/8px Rubik;
+        }
+
+        .welcome {
+            font: normal normal medium 18px/8px Rubik;
+            margin-top: -4px;
+        }
+
+        .smart-bar-text {
+            font: normal normal 19px/8px Rubik;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        /* Close button  */
+        #closeBtn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+            position: relative;
+            right: 10px;
+        }
+
+        #closeBtn:hover {
+            color: #cccccc;
+        }
+
+        @media only screen and (max-width: 1080px) {
+            .container-fluid {
+                display: none;
+            }
+        }
+
+        /* tüm kurslar  */
+        .card-courses {
+            border-radius: 15px;
+            width: 70%;
+             /* Center horizontally */
+        }
+
+        .row-cols-md-2 > * {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        /* Additional styling for smaller screens */
+        @media (max-width: 767px) {
+            .courses-select {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .me-5 {
+                margin-bottom: 0; /* Başlık ile sütun arasındaki boşluğu kaldırır */
+            }
+
+            /* Seçim kutusunu daha dar yap */
+            #select-sort {
+                width: 150px;
+            }
+
+            /* Açılır menü seçeneklerini daha küçük yap */
+            #select-sort option {
+                font-size: 14px;
+            }
+        }
+
+        .sidebar {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 20px;
+        }
+
+        .sidebar label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .sidebar input,
+        .sidebar select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background-color: #5a78a6;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover {
+            background-color: #456192;
+        }
+
+    </style>
+</head>
+<body>
+{% include 'partials/_smartbar.html' %}
+{% if user.is_authenticated %}
+{% include 'partials/mainafternavbar.html' %}
+{% else %}
+{% include 'partials/mainnavbar.html' %}
+{% endif %}
+<br>
+<br>
+<br>
+<br>
+
+
+
+<div class="container mt-2">
+    <div class="row">
+        <!-- Sidebar -->
+
+        <table class="table table-bordered" >
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col" style="width: 50%;white-space: nowrap">Kurs</th>
+                <th scope="col" style="white-space: nowrap;text-align:center">Toplantı Durumu</th>
+                <th scope="col" style="white-space: nowrap;text-align:center">Toplantı Tarihi</th>
+                <th scope="col" style="white-space: nowrap;text-align:center">Toplantı Bağlantısı</th>
+                <th scope="col" style="white-space: nowrap;text-align:center">Toplantı Ders Kaydı</th>
+            </tr>
+            </thead>
+
+
+            <div>
+                <section class="courses">
+                    <div class="courses-title justify-content-between align-items-center mb-4">
+                        <h2 class="ud-heading-xl me-5 col-lg-8 justify-content-start fw-bold">Tüm Kurslarım</h2>
+                        <div class="me-5 mt-3 col-lg-4 d-flex">
+                            <label for="select-sort" class="fw-bold mt-2">Sırala:&nbsp;&nbsp;</label>
+                            <select id="select-sort">
+                                <option value="default">Seçenekler</option>
+                                <option value="priceHigh">Fiyata Göre En Yüksek</option>
+                                <option value="ratingHigh">Puana Göre En Yüksek</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Course Cards -->
+                </section>
+                {% for purchase in purchases %}
+                <tr id ="{{target_meeting}}">
+                    <td>
+                        <div class="card-courses mb-4">
+                            <div class="row align-items-left">
+                                <div class="col-md-12 col-lg-5">
+                                    <img src="{{ purchase.item.image_path }}" data-was-processed="true"
+                                         class="card-courses-img img-fluid w-100 rounded"/>
+                                </div>
+                                <div class="col">
+                                    <div class="card-info">
+                                        <div class="card-title fw-bold">
+                                            <h4>{{ purchase.item.name }}</h4>
+                                        </div>
+                                        <div class="card-description">{{ purchase.item.details }}</div>
+                                        <div class="card-teacher">Öğretmen: {{ purchase.item.instructor.user.username}}
+                                        </div>
+                                        <div class="d-flex">
+                                            <div class="card-rating">Puan: {{ purchase.item.rating }}</div>
+                                            <svg class="mx-2 my-1" xmlns="http://www.w3.org/2000/svg"
+                                                 viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                                                <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="card-price fw-bold">Fiyat: ₺{{ purchase.item.price }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    {% for key, value in purchase_meetings_map.items %}
+                    {% if purchase.id == key %}
+                        {% if value.0.status == 'WaitingInstructor' %}
+                            <td style="text-align: center">Görüşme Linki Bekleniyor</td>
+                        {%elif value.0.status == 'Completed' %}
+                            <td style="text-align: center">Tamamlandı</td>
+                        {%else%}
+                            <td style="text-align: center">Görüşme Bekleniyor</td>
+                        {% endif %}
+                    {% if value.0.date %}
+                        <td style="text-align: center;white-space: nowrap">{{ value.0.date }}</td>
+                    {%else%}
+                        <td style="text-align: center;white-space: nowrap">Tarih Bulunmuyor</td>
+                    {% endif %}
+                    <td style="text-align: center">
+                       {% if value.0.url %}
+                        <a href="{{ value.0.url }}" class="btn btn-primary btn-sm" target="_blank">Toplantı Linki</a>
+                        {%else%}
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>
+                            Eklenmedi
+                        </button>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center">
+                       {% if value.0.video_url %}
+                        <a href="{{ value.0.video_url }}" class="btn btn-primary btn-sm" target="_blank">Ders Linki</a>
+                        {%else%}
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>
+                            Eklenmedi
+                        </button>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                    {% endfor %}
+
+                </tr>
+                {% endfor %}
+
+
+            </div>
+        </table>
+    </div>
+</div>
+
+
+
+
+{% include 'partials/_footer.html' %}
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+{% if target_meeting %}
+    <script>
+        window.location.href = "#{{target_meeting}}";
+        document.getElementById("{{target_meeting}}").classList.add('table-success');
+    </script>
+{%endif%}
+
+
+
+<!-- smartbar script -->
+<script>
+    document.getElementById('closeBtn').addEventListener('click', function () {
+        document.querySelector('.smartbar').style.display = 'none'
+    })
+</script>
+<script>
+    // Filtreleme işlevi
+    function filterCourses() {
+        var priceInput = document.getElementById('course-price').value
+        var ratingSelect = document.getElementById('course-rating').value
+        var cards = document.querySelectorAll('.card-courses')
+
+        cards.forEach(function (card) {
+            var price = parseFloat(card.querySelector('.card-price').innerText.replace('Fiyat: ₺', ''))
+            var rating = parseFloat(card.querySelector('.card-rating').innerText.replace('Puan: ', ''))
+            var isVisible = true
+
+            // Fiyat kontrolü
+            if (price > priceInput) {
+                isVisible = false
+            }
+
+            // Puan kontrolü
+            if (rating < ratingSelect) {
+                isVisible = false
+            }
+
+            // Kart görünürlüğünü ayarla
+            if (isVisible) {
+                card.style.display = 'block'
+            } else {
+                card.style.display = 'none'
+            }
+        })
+    }
+
+    // Filtreleme düğmesine tıklanınca filtreleme işlevini çağır
+    document.querySelector('.filter-btn').addEventListener('click', filterCourses)
+
+    function sortCourses() {
+        var select = document.getElementById('select-sort')
+        var value = select.value
+        var cardContainer = document.querySelector('.courses') // Class adınızı düzeltin
+        var cards = Array.from(document.querySelectorAll('.card-courses'))
+        var title = document.querySelector('.courses-title') // Başlık
+
+        // Başlık, sıralama işlemi başlamadan önce kartların içinde değilse, kartların başına
+        if (!cardContainer.contains(title)) {
+            cardContainer.insertBefore(title, cardContainer.firstChild)
+        }
+
+        if (value === 'priceHigh') {
+            cards.sort((a, b) => {
+                var priceA = parseFloat(a.querySelector('.card-price').innerText.replace('Fiyat: ₺', ''))
+                var priceB = parseFloat(b.querySelector('.card-price').innerText.replace('Fiyat: ₺', ''))
+                return priceB - priceA
+            })
+        } else if (value === 'ratingHigh') {
+            cards.sort((a, b) => {
+                var ratingA = parseFloat(a.querySelector('.card-rating').innerText.replace('Puan: ', ''))
+                var ratingB = parseFloat(b.querySelector('.card-rating').innerText.replace('Puan: ', ''))
+                return ratingB - ratingA
+            })
+        }
+
+        // Append sorted cards
+        cards.forEach((card) => {
+            cardContainer.appendChild(card)
+        })
+    }
+
+    // Ensure sortCourses() is called when select element changes
+    document.getElementById('select-sort').addEventListener('change', sortCourses)
+</script>
+</body>
+</html>

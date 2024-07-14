@@ -1,0 +1,381 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous" />
+    <style>
+      body {
+        font-family: 'Rubik', sans-serif;
+      }
+      /*smartbar*/
+      .left-content {
+        display: flex;
+        align-items: center;
+      }
+      
+      .date {
+        font: normal normal normal 14px/8px Rubik;
+      }
+      
+      .welcome {
+        font: normal normal medium 18px/8px Rubik;
+        margin-top: -4px;
+      }
+      
+      .smart-bar-text {
+        font: normal normal 19px/8px Rubik;
+        color: #ffffff;
+        text-decoration: none;
+      }
+      
+      /* Close button style */
+      #closeBtn {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        color: #ffffff;
+        position: relative;
+        right: 10px; /* Adjust as needed */
+      }
+      
+      #closeBtn:hover {
+        color: #cccccc;
+      }
+      
+      @media only screen and (max-width: 1080px) {
+        .container-fluid {
+          display: none;
+        }
+      }
+      .terms {
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+      }
+      
+      .list-group-item.active {
+        background-color: #000000;
+        border-color: #000000;
+      }
+      
+      /* policy */
+      .policyarticles {
+        height: 100vh;
+        overflow-y: auto;
+      }
+      
+      .policyexplains {
+        height: 100%;
+      }
+      
+      .tab-pane.fade p {
+        justify-content: center;
+        text-align: start;
+        padding-top: 2%;
+      }
+      .tab-pane.fade button {
+        display: block;
+        border: none;
+        background-color: #143f80;
+        border-radius: 35px;
+        color: #fff;
+        font-size: 15px;
+        margin: auto;
+      }
+    </style>
+
+    <title>terms</title>
+  </head>
+  <body>
+    <section class="smartbar container-fluid">
+      <div class="row topnavjs" style="background-color: #1d1d1b; height: 35px">
+        <div class="offset-xl-1 col-xl-3 col-lg-3 col-md-3 px-0 my-auto" style="background-color: #1d1d1b">
+          <div class="left-content text-white">
+            <div class="date" id="date">01.01.2023 Çarşamba</div>
+            <div class="welcome">&nbsp;|&nbsp;SWAP'A Hoş Geldiniz</div>
+          </div>
+        </div>
+        <div class="col-xl-7 col-lg-7 col-md-7 my-auto">
+          <ul class="list-group list-group-horizontal list-unstyled float-end align-items-center" style="margin-left:75%">
+            <a class="smart-bar-text text-bold ud-text-with-links me-5" onclick="window.location.href='login';">Değişime var mısın?</a>
+            <button id="closeBtn"><i class="fas fa-times"></i></button>
+          </ul>
+        </div>
+      </div>
+    </section>
+    {% if user.is_authenticated %}
+      {% include 'partials/mainafternavbar.html' %}
+    {% else %}
+      {% include 'partials/mainnavbar.html' %}
+    {% endif %}
+
+    <div class="container terms" style="margin-top:5%">
+      <div class="row">
+        <div class="policyarticles col-lg-3">
+          <div class="list-group" id="list-tab" role="tablist" style="margin-top: 15%">
+            <a class="list-group-item list-group-item-action active" id="list-kullanımşartları-list" data-toggle="list" href="#list-kullanımşartları" role="tab" aria-controls="kullanımşartları">Kullanım Şartları</a>
+            <a class="list-group-item list-group-item-action" id="list-gizlilikpolitikası-list" data-toggle="list" href="#list-gizlilikpolitikası" role="tab" aria-controls="gizlilikpolitikası">Gizlilik Politikası</a>
+            <a class="list-group-item list-group-item-action" id="list-hakkımızda-list" data-toggle="list" href="#list-hakkımızda" role="tab" aria-controls="hakkımızda">Hakkımızda</a>
+            <a class="list-group-item list-group-item-action" id="list-swapdaegitmenolun-list" data-toggle="list" href="#list-swapdaegitmenolun" role="tab" aria-controls="swapdaegitmenolun">Swap'da Eğitmen Olun</a>
+            <a class="list-group-item list-group-item-action" id="list-sıkcasorulansorular-list" data-toggle="list" href="#list-sıkcasorulansorular" role="tab" aria-controls="sıkcasorulansorular">Sıkça Sorulan Sorular</a>
+            <a class="list-group-item list-group-item-action" id="list-kisiselverilerinkorunmasi-list" data-toggle="list" href="#list-kisiselverilerinkorunmasi" role="tab" aria-controls="kisiselverilerinkorunmasi">Kişisel Verilerin Korunması (KVKK)</a>
+            <a class="list-group-item list-group-item-action" id="list-yardimvedestek-list" data-toggle="list" href="#list-yardimvedestek" role="tab" aria-controls="yardimvedestek">Yardım ve Destek</a>
+            <a class="list-group-item list-group-item-action" id="list-iptalveiadekosullari-list" data-toggle="list" href="#list-iptalveiadekosullari" role="tab" aria-controls="iptalveiadekosullari">İptal ve İade Koşulları</a>
+            <a class="list-group-item list-group-item-action" id="list-erişilebilirlikbeyanı-list" data-toggle="list" href="#list-erişilebilirlikbeyanı" role="tab" aria-controls="erişilebilirlikbeyanı">Erişilebilirlik Beyanı</a>
+          </div>
+        </div>
+        <!-- Sağ taraftaki içerik panelleri -->
+        <div class="policyexplains col-lg-9 pt-5">
+          <div class="tab-content" id="nav-tabContent">
+            <!-- Kullanım Şartları içeriği -->
+            <div class="tab-pane fade show active" id="list-kullanımşartları" role="tabpanel" aria-labelledby="list-kullanımşartları-list">
+              <h1>Kullanım Şartları</h1>
+              <p>
+                1. Introduction Welcome to Swap! Swap is a web-based platform that connects students and professors for online classes on various subjects. By using our platform, you agree to comply with and be bound by the following terms and conditions of use. Please review these terms carefully. If you do not agree with these terms, you should not use our platform.<br />
+                2. Acceptance of Terms By accessing and using Swap, you accept and agree to be bound by the terms and provisions of this agreement. In addition, when using Swap's services, you shall be subject to any posted guidelines or rules applicable to such services, which may be posted and modified from time to time. All such guidelines or rules are hereby incorporated by reference into these terms of use.<br />
+                3. Use of the Platform Eligibility: You must be at least 18 years old to be Instructor in Swap. By using Swap, you represent and warrant that you have the right, authority, and capacity to enter into this agreement and to abide by all of the terms and conditions of this agreement.<br />
+                User Account: You are required to create an account to use certain features of the platform. You must provide accurate and complete information and keep your account information updated. You are responsible for maintaining the confidentiality of your account and password and for restricting access to your computer.<br />
+                Prohibited Activities: You agree not to engage in any of the following prohibited activities:<br />
+                Copying, distributing, or disclosing any part of the platform in any medium.<br />
+                Using any automated system, including without limitation "robots," "spiders," and "offline readers," to access the platform.<br />
+                Transmitting spam, chain letters, or other unsolicited email.<br />
+                Attempting to interfere with, compromise the system integrity or security, or decipher any transmissions to or from the servers running the platform.<br />
+                Taking any action that imposes, or may impose at our sole discretion an unreasonable or disproportionately large load on our infrastructure.<br />
+                Uploading invalid data, viruses, worms, or other software agents through the platform.<br />
+                Collecting or harvesting any personally identifiable information, including account names, from the platform.<br />
+                Using the platform for any commercial solicitation purposes.<br />
+                Impersonating another person or otherwise misrepresenting your affiliation with a person or entity, conducting fraud, hiding, or attempting to hide your identity.<br />
+                4. Intellectual Property Rights The content on Swap, excluding user-generated content, is the property of Swap or its licensors and is protected by copyright, trademark, and other intellectual property laws. You may not use, copy, reproduce, distribute, display, or create derivative works of any content from the platform without our prior written permission.<br />
+                5. User-Generated Content Responsibility: You are solely responsible for the content that you upload, post, or otherwise make available on the platform. By posting content, you grant Swap a worldwide, non-exclusive, royalty-free, transferable license to use, reproduce, distribute, prepare derivative works of, display, and perform the content in connection with the platform and Swap's business.<br />
+                Prohibited Content: You agree not to post content that:<br />
+                Is unlawful, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, libelous, or invasive of another's privacy.<br />
+                Infringes any patent, trademark, trade secret, copyright, or other proprietary rights of any party.<br />
+                Contains software viruses or any other computer code, files, or programs designed to interrupt, destroy, or limit the functionality of any computer software or hardware.<br />
+                Impersonates any person or entity or falsely states or otherwise misrepresents your affiliation with a person or entity. <br />
+                6. Payment and Refund Policy Payment: All payments are processed securely through our third-party payment processor. By providing payment information, you represent and warrant that you are authorized to use the payment method and that you authorize us to charge your payment method for the total amount of your purchase. Refunds: Our refund policy is as follows:<br />
+                If you are not satisfied with a course, you may request a refund within 7 days of purchase. Refund requests should be directed to our customer support team at support@swap.com. Refunds will be processed within 10 business days and will be credited back to the original method of payment. <br />
+                7. Termination We may terminate or suspend your account and bar access to the platform immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever, including without limitation if you breach the terms. Upon termination, your right to use the platform will immediately cease. If you wish to terminate your account, you may simply discontinue using the platform.<br />
+
+                8. Limitation of Liability In no event shall Swap, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your use or inability to use the platform; (ii) any unauthorized access to or use of our servers and/or any personal information stored therein; (iii) any interruption or cessation of transmission to or from the platform; (iv) any bugs, viruses, trojan horses, or the like that may be transmitted to or through our platform by any third party; (v) any errors or omissions in any content or for any loss or damage incurred as a result of the use of any content posted, emailed, transmitted, or otherwise made available through the platform; and/or (vi) the defamatory, offensive, or illegal conduct of any third party.<br />
+
+                9. Governing Law These terms shall be governed and construed in accordance with the laws of the jurisdiction where Swap operates, without regard to its conflict of law provisions. Our failure to enforce any right or provision of these terms will not be considered a waiver of those rights. If any provision of these terms is held to be invalid or unenforceable by a court, the remaining provisions of these terms will remain in effect. These terms constitute the entire agreement between us regarding our platform and supersede and replace any prior agreements we might have had between us regarding the platform.<br />
+
+                10. Changes to Terms We reserve the right, at our sole discretion, to modify or replace these terms at any time. If a revision is material, we will try to provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion. By continuing to access or use our platform after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, you are no longer authorized to use the platform.<br />
+
+                11. Contact Us If you have any questions about these terms, please contact us at support@swap.com.
+              </p>
+            </div>
+            <!-- Gizlilik Politikası içeriği -->
+            <div class="tab-pane fade" id="list-gizlilikpolitikası" role="tabpanel" aria-labelledby="list-gizlilikpolitikası-list">
+              <h1>Gizlilik Politikası</h1>
+              <p>
+                1. Introduction Welcome to Swap! Your privacy is critically important to us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our platform. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site.<br />
+
+                2. Information We Collect We may collect information about you in a variety of ways. The information we may collect on the platform includes:<br />
+
+                &nbsp; 2.1 Personal Data &nbsp; Personally identifiable information, such as your name, shipping address, email address, and telephone number, and demographic information, such as your age, gender, hometown, and interests, that you voluntarily give to us when you register with the platform or when you choose to participate in various activities related to the platform.<br />
+
+                &nbsp; 2.2 Derivative Data &nbsp; Information our servers automatically collect when you access the platform, such as your IP address, your browser type, your operating system, your access times, and the pages you have viewed directly before and after accessing the platform.<br />
+
+                &nbsp; 2.3 Financial Data &nbsp; Financial information, such as data related to your payment method (e.g., valid credit card number, card brand, expiration date) that we may collect when you purchase, order, return, exchange, or request information about our services from the platform. We store only very limited, if any, financial information that we collect. Otherwise, all financial information is stored by our payment processor.<br />
+
+                &nbsp; 2.4 Mobile Device Data &nbsp; Device information, such as your mobile device ID, model, and manufacturer, and information about the location of your device, if you access the platform from a mobile device.<br />
+
+                &nbsp; 2.5 Third-Party Data &nbsp; Information from third parties, such as personal information or network friends, if you connect your account to the third party and grant the platform permission to access this information.<br />
+
+                3. Use of Your Information Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the platform to:<br />
+
+                Create and manage your account.<br />
+                Process your transactions and send you related information, including purchase confirmations and invoices.<br />
+                Manage your orders and payments.<br />
+                Provide, operate, and maintain our services.<br />
+                Improve, personalize, and expand our services.<br />
+                Understand and analyze how you use our platform.<br />
+                Develop new products, services, features, and functionality.<br />
+                Communicate with you, either directly or through one of our partners, including for customer service, to provide you with updates and other information relating to the platform, and for marketing and promotional purposes.<br />
+                Process your transactions and manage your orders.<br />
+                Send you emails.<br />
+                Find and prevent fraud.<br />
+                Respond to product and customer service requests.<br />
+
+                4. Security of Your Information We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse.<br />
+
+                5. Controls for Do-Not-Track Features Most web browsers and some mobile operating systems include a Do-Not-Track ("DNT") feature or setting you can activate to signal your privacy preference not to have data about your online browsing activities monitored and collected. No uniform technology standard for recognizing and implementing DNT signals has been finalized. As such, we do not currently respond to DNT browser signals or any other mechanism that automatically communicates your choice not to be tracked online. If a standard for online tracking is adopted that we must follow in the future, we will inform you about that practice in a revised version of this Privacy Policy.<br />
+
+                6. Contact Us If you have any questions about this Privacy Policy, please contact us:<br />
+
+                By email: support@swap.com<br />
+                By visiting this page on our website: Contact Us
+              </p>
+            </div>
+            <!-- Hakkımızda içeriği -->
+            <div class="tab-pane fade" id="list-hakkımızda" role="tabpanel" aria-labelledby="list-hakkımızda-list">
+              <h1>Hakkımızda</h1>
+              <p>
+                About Us <br />
+                Welcome to Swap, a revolutionary web-based platform dedicated to transforming the way you learn and teach. At Swap, we believe that education should be accessible, flexible, and personalized. Our mission is to connect passionate students with knowledgeable professors from around the world, creating an engaging and interactive online learning environment.
+
+                Swap offers a wide range of courses across various disciplines, allowing you to explore your interests and achieve your academic and personal goals from the comfort of your home. Our platform is designed to provide a seamless learning experience, with features like live interactive sessions, personalized learning paths, and secure payment systems.
+
+                Join Swap today and embark on a journey of knowledge sharing and personal growth. Together, we can make education a more enriching and fulfilling experience for everyone.
+              </p>
+            </div>
+            <!-- Swap'da Eğitmen Olun içeriği -->
+            <div class="tab-pane fade" id="list-swapdaegitmenolun" role="tabpanel" aria-labelledby="list-swapdaegitmenolun-list">
+              <h1>Swap'da Eğitmen Olun</h1>
+              <p>
+                Are you a university student with an edu email? Join Swap as an instructor and turn your knowledge into income! On Swap, you can share your expertise with a global audience while earning extra money. Teach courses in your field of study, conduct live sessions, and help others learn and grow.<br />
+
+                Why Become an Instructor on Swap?<br />
+
+                Earn Income: Get paid for sharing your knowledge and expertise.<br />
+                Expand Your Reach: Connect with learners from all around the world.<br />
+                Flexible Teaching: Set your own schedule and teach at your convenience.<br />
+                Enhance Your Skills: Improve your teaching abilities and build your resume.<br />
+                Sign up with your edu email today and start making a difference while earning money on Swap!
+              </p>
+              <a class="text-decoration-none" onclick="window.location.href='{% url 'register_insturctor' %}'"><button class="mt-5 px-5 py-2">Eğitmen Ol</button></a>
+            </div>
+            <!-- Sıkça Sorulan Sorular içeriği -->
+            <div class="tab-pane fade" id="list-sıkcasorulansorular" role="tabpanel" aria-labelledby="list-sıkcasorulansorular-list">
+              <h1>Sıkça Sorulan Sorular</h1>
+              <p>
+                1. What is Swap?<br />
+                Swap is an online platform that connects students and professors for live, interactive classes on a wide range of subjects.<br />
+
+                2. How do I sign up?<br />
+                You can sign up by creating an account with your email address and following the registration process on our website.<br />
+
+                3. Who can become an instructor on Swap?<br />
+                University students and professors with an edu email can become instructors, share their knowledge, and earn money.<br />
+
+                4. How do I book a live session?<br />
+                Search for courses, select the one you're interested in, and follow the instructions to book a session with the instructor.
+
+                5. How are payments processed?<br />
+                Payments are securely processed through our platform. You can use various payment methods for your convenience.<br />
+
+                6. Can I access recorded sessions?<br />
+                Yes, all live sessions are recorded and made available to students for future reference.<br />
+
+                7. How can I provide feedback?<br />
+                After attending a session, you can rate the course and provide feedback to help us improve our services.<br />
+
+                For more questions, please contact our support team at support@swap.com.
+              </p>
+            </div>
+            <!-- Kişisel Verilerin Korunması içeriği -->
+            <div class="tab-pane fade" id="list-kisiselverilerinkorunmasi" role="tabpanel" aria-labelledby="list-kisiselverilerinkorunmasi-list">
+              <h1>Kişisel Verilerin Korunması (KVKK)</h1>
+              <p>
+                At Swap, we take your privacy seriously and are committed to protecting your personal data. We adhere to strict data protection regulations to ensure that your information is secure and used responsibly.<br />
+
+                Data Collection: We only collect the necessary information to provide and improve our services.<br />
+                Data Usage: Your data is used to create and manage your account, process transactions, and enhance your learning experience.<br />
+                Data Security: We implement advanced security measures to protect your data from unauthorized access, disclosure, or alteration.<br />
+                Your Rights: You have the right to access, correct, and delete your personal data. You can also manage your privacy settings at any time.<br />
+                For more information on how we handle your personal data, please refer to our detailed Privacy Policy or contact us at support@swap.com.<br />
+              </p>
+            </div>
+            <!-- Yardım ve Destek içeriği -->
+            <div class="tab-pane fade" id="list-yardimvedestek" role="tabpanel" aria-labelledby="list-yardimvedestek-list">
+              <h1>Yardım ve Destek</h1>
+              <p>
+                At Swap, we're here to assist you every step of the way. Whether you have questions about using the platform, need help with your account, or require technical support, our dedicated team is ready to help.<br />
+
+                FAQs: Visit our Frequently Asked Questions page for quick answers to common queries.<br />
+                Email Support: Contact us at support@swap.com for personalized assistance from our support team.<br />
+                Live Chat: Use our live chat feature on the website for real-time support during business hours.<br />
+                Guides and Tutorials: Explore our comprehensive guides and tutorials to make the most of your Swap experience.<br />
+                We're committed to ensuring you have a seamless and enjoyable experience on Swap. Don't hesitate to reach out with any questions or concerns!
+              </p>
+            </div>
+            <!-- İptal ve İade Koşulları içeriği -->
+            <div class="tab-pane fade" id="list-iptalveiadekosullari" role="tabpanel" aria-labelledby="list-iptalveiadekosullari-list">
+              <h1>İptal ve İade Koşulları</h1>
+              <p>
+                At Swap, we strive to provide the best learning experience. If you're not satisfied with a course, you can request a refund within 7 days of purchase. Refunds will be processed within 10 business days and credited back to your original payment method.<br />
+
+                To request a refund or for any cancellation inquiries, please contact our support team at support@swap.com. We’re here to help!
+              </p>
+            </div>
+            <!-- Erişilebilirlik Beyanı içeriği -->
+            <div class="tab-pane fade" id="list-erişilebilirlikbeyanı" role="tabpanel" aria-labelledby="list-erişilebilirlikbeyanı-list">
+              <h1>Erişilebilirlik Beyanı</h1>
+              <p>
+                At Swap, we are committed to making our platform accessible to everyone. We strive to ensure that our website and services are usable by individuals of all abilities.<br />
+
+                Inclusive Design: Our platform is designed to be inclusive and user-friendly for all.<br />
+                Accessibility Features: We continuously work to incorporate features that support diverse needs, including screen reader compatibility and keyboard navigation.<br />
+                Feedback Welcome: We value your feedback on how we can improve accessibility. If you encounter any barriers or have suggestions, please contact us at support@swap.com.<br />
+                We are dedicated to providing an accessible learning environment for everyone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- smartbar script -->
+    <script>
+      document.getElementById('closeBtn').addEventListener('click', function () {
+        document.querySelector('.smartbar').style.display = 'none'
+      })
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    <!-- footer -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.hash) {
+          const hash = window.location.hash
+          const targetTab = document.querySelector('a[href="' + hash + '"]')
+          if (targetTab) {
+            const tabList = new bootstrap.Tab(targetTab)
+            tabList.show()
+          }
+        }
+      
+        // URL hash değeri değiştiğinde sayfayı güncelle
+        window.addEventListener('hashchange', function () {
+          const hash = window.location.hash
+          const targetTab = document.querySelector('a[href="' + hash + '"]')
+          if (targetTab) {
+            const tabList = new bootstrap.Tab(targetTab)
+            tabList.show()
+          }
+        })
+      
+        // Tab'a tıklandığında URL hash değerini güncelle
+        document.querySelectorAll('.list-group-item').forEach(function (tab) {
+          tab.addEventListener('click', function (event) {
+            window.location.hash = event.target.getAttribute('href')
+          })
+        })
+      })
+    </script>
+    <!-- footer -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.hash) {
+          const hash = window.location.hash
+          const targetTab = document.querySelector('a[href="' + hash + '"]')
+          if (targetTab) {
+            const tabList = new bootstrap.Tab(targetTab)
+            tabList.show()
+          }
+        }
+      
+        // Update the URL hash when a tab is clicked
+        document.querySelectorAll('.list-group-item').forEach(function (tab) {
+          tab.addEventListener('click', function (event) {
+            window.location.hash = event.target.getAttribute('href')
+          })
+        })
+      })
+    </script>
+  </body>
+</html>

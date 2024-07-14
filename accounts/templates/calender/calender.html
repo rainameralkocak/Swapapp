@@ -1,0 +1,335 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f2f5;
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .calendar {
+        width: 100%;
+        max-width: 1000px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .calendar-header button {
+        background: #add8e6; /* Pastel light blue */
+        border: none;
+        color: #333;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .calendar-header button:hover {
+        background: #87ceeb; /* Darker pastel blue */
+      }
+      .calendar-header h2 {
+        margin: 0;
+        text-align: center;
+        flex-grow: 1;
+      }
+      .calendar-body {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        position: relative;
+      }
+      .day {
+        padding: 10px;
+        background: #f0f2f5;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .day:hover {
+        background: #e0e0e0;
+      }
+      .day.busy {
+        background: #f28b82;
+        cursor: not-allowed;
+      }
+      .day.available {
+        background: #81c995;
+      }
+      .day-header {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 300px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1000;
+      }
+      .popup h3 {
+        margin-top: 0;
+      }
+      .popup ul {
+        list-style: none;
+        padding: 0;
+      }
+      .popup ul li {
+        padding: 10px;
+        background: #f0f2f5;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .popup ul li:hover {
+        background: #e0e0e0;
+      }
+      .popup .close-btn {
+        background: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        float: right;
+      }
+      @keyframes slideOutLeft {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+      }
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .slide-out-left {
+        animation: slideOutLeft 0.5s forwards;
+      }
+      .slide-out-right {
+        animation: slideOutRight 0.5s forwards;
+      }
+      .slide-in-left {
+        animation: slideInLeft 0.5s forwards;
+      }
+      .slide-in-right {
+        animation: slideInRight 0.5s forwards;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calendar">
+      <div class="calendar-header">
+        <button id="prevMonth"><i class="fa-solid fa-arrow-left"></i></button>
+        <h2 id="monthYear"></h2>
+        <button id="nextMonth"><i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+      <div class="calendar-body" id="calendarBody">
+        <div class="day-header">Sun</div>
+        <div class="day-header">Mon</div>
+        <div class="day-header">Tue</div>
+        <div class="day-header">Wed</div>
+        <div class="day-header">Thu</div>
+        <div class="day-header">Fri</div>
+        <div class="day-header">Sat</div>
+      </div>
+      <div style="margin-top: 5%; align-items: center; display: flex; justify-content: center">
+
+        <button style="padding: 10px; background-color: #5a78a6; border: none; color: white; cursor: pointer" onclick="window.location.href='{% url "odeme" %}'">Ödeme Yap</button>
+      </div>
+    </div>
+
+    <div class="popup" id="popup">
+      <button class="close-btn" id="closePopup">X</button>
+      <h3>Select Time Slot</h3>
+      <ul id="timeSlots">
+        <!-- Time slots will be dynamically added here -->
+      </ul>
+    </div>
+
+    <script>
+      const busyDays = [3, 5, 10, 15]; // Instructor's busy days
+      const availableDays = [2, 4, 6, 7, 11, 14, 16]; // Instructor's available days
+      const timeSlots = ["09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00", "13:00 - 14:00", "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00"];
+
+      let today = new Date();
+      let currentMonth = today.getMonth();
+      let currentYear = today.getFullYear();
+
+      const monthYear = document.getElementById("monthYear");
+      const calendarBody = document.getElementById("calendarBody");
+      const popup = document.getElementById("popup");
+      const timeSlotsList = document.getElementById("timeSlots");
+      const closePopup = document.getElementById("closePopup");
+
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+      function renderCalendar(month, year) {
+        calendarBody.innerHTML = `
+                <div class="day-header">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
+            `;
+        monthYear.textContent = `${months[month]} ${year}`;
+        const firstDay = new Date(year, month).getDay();
+        const daysInMonth = 32 - new Date(year, month, 32).getDate();
+
+        for (let i = 0; i < firstDay; i++) {
+          const emptyCell = document.createElement("div");
+          calendarBody.appendChild(emptyCell);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+          const dayCell = document.createElement("div");
+          dayCell.textContent = day;
+          dayCell.classList.add("day");
+
+          if (busyDays.includes(day)) {
+            dayCell.classList.add("busy");
+          } else if (availableDays.includes(day)) {
+            dayCell.classList.add("available");
+            dayCell.addEventListener("click", () => openPopup(day));
+          }
+
+          calendarBody.appendChild(dayCell);
+        }
+      }
+
+      function openPopup(day) {
+        popup.style.display = "block";
+        timeSlotsList.innerHTML = "";
+        timeSlots.forEach((slot) => {
+          const li = document.createElement("li");
+          li.textContent = slot;
+          li.addEventListener("click", () => selectTimeSlot(day, slot));
+          timeSlotsList.appendChild(li);
+        });
+      }
+
+      function selectTimeSlot(day, slot) {
+        alert(`You selected ${slot} on ${months[currentMonth]} ${day}, ${currentYear}`);
+        closePopupFn();
+      }
+
+      function closePopupFn() {
+        popup.style.display = "none";
+      }
+
+      document.getElementById("prevMonth").addEventListener("click", () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        animateCalendar("right", () => renderCalendar(currentMonth, currentYear));
+      });
+
+      document.getElementById("nextMonth").addEventListener("click", () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        animateCalendar("left", () => renderCalendar(currentMonth, currentYear));
+      });
+
+      closePopup.addEventListener("click", closePopupFn);
+
+      function animateCalendar(direction, callback) {
+        const days = Array.from(document.querySelectorAll(".day"));
+        const numColumns = 7;
+        let delay = 0;
+
+        // Slide out old columns
+        for (let i = 0; i < numColumns; i++) {
+          const columnDays = days.filter((_, index) => index % numColumns === i);
+          columnDays.forEach((day) => {
+            setTimeout(() => {
+              day.classList.add(direction === "left" ? "slide-out-right" : "slide-out-left");
+            }, delay);
+          });
+          delay += 100;
+        }
+
+        setTimeout(() => {
+          callback();
+          const newDays = Array.from(document.querySelectorAll(".day"));
+          delay = 0;
+
+          // Slide in new columns
+          for (let i = 0; i < numColumns; i++) {
+            const columnDays = newDays.filter((_, index) => index % numColumns === i);
+            columnDays.forEach((day) => {
+              day.classList.add(direction === "left" ? "slide-in-left" : "slide-in-right");
+              setTimeout(() => {
+                day.classList.remove("slide-in-left", "slide-in-right");
+              }, delay + 500);
+            });
+            delay += 100;
+          }
+        }, numColumns * 100 + 500); // ensure all columns have animated out before calling callback
+      }
+
+      renderCalendar(currentMonth, currentYear);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,858 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <title>Ödeme Seçenekleri</title>
+    <style>
+      .payment {
+        max-width: 40%;
+        border: 0.5px solid #ddd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .tab-header {
+        display: flex;
+        background-color: #f1f1f1;
+      }
+      .tab-link {
+        flex: 1;
+        padding: 10px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        color: black;
+        transition: background-color 0.3s, border-bottom 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .tab-link:hover {
+        background-color: #ddd;
+      }
+      .tab-link.active {
+        background-color: #ccc;
+        border-bottom: 2px solid #333;
+      }
+      .tab-link i {
+        margin-right: 8px;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      /* kayıtlı kartlar */
+      .registered-card {
+        background-color: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+      }
+      
+      .registered-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 1rem;
+        border-bottom: 1.5px double #777;
+        padding: 5px;
+      }
+      
+      .registered-card-header span {
+        font-weight: bold;
+        color: #f58220;
+        font-size: 1rem;
+      }
+      
+      .edit-link {
+        font-size: 0.8em;
+        color: #007bff;
+        text-decoration: none;
+      }
+      
+      .registered-card-details p {
+        margin: 5px 0;
+        color: #333;
+        font-size: 0.9rem;
+      }
+      
+      .registered-card-logo img {
+        width: auto;
+        max-width: 30%;
+        height: auto;
+        margin-left: 60%;
+      }
+      
+      @media (max-width: 768px) {
+        .registered-card {
+          padding: 8px;
+        }
+      
+        .registered-card-header {
+          font-size: 0.85rem;
+        }
+      
+        .registered-card-header span {
+          font-size: 0.85rem;
+        }
+      
+        .edit-link {
+          font-size: 0.75em;
+        }
+      
+        .registered-card-details p {
+          font-size: 0.85rem;
+        }
+      
+        .registered-card-logo img {
+          max-width: 25%;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .registered-card {
+          padding: 5px;
+        }
+      
+        .registered-card-header {
+          font-size: 0.8rem;
+        }
+      
+        .registered-card-header span {
+          font-size: 0.8rem;
+        }
+      
+        .edit-link {
+          font-size: 0.7em;
+        }
+      
+        .registered-card-details p {
+          font-size: 0.8rem;
+        }
+      
+        .registered-card-logo img {
+          max-width: 20%;
+        }
+      }
+      
+      @media (max-width: 390px) {
+        .registered-card-header {
+          flex-direction: column; /* Stack header content vertically */
+          align-items: flex-start; /* Align items to the start */
+        }
+      
+        .registered-card-header span {
+          font-size: 0.75rem;
+          margin-bottom: 5px; /* Add margin for separation */
+        }
+      
+        .edit-link {
+          font-size: 0.65em;
+        }
+      
+        .registered-card-details p {
+          font-size: 0.75rem;
+        }
+      
+        .registered-card-logo img {
+          max-width: 50px; /* Use a fixed size for better control */
+          margin-left: 0; /* Reset margin to align left */
+        }
+      
+        .d-flex {
+          flex-direction: column;
+          align-items: flex-start; /* Align details and logo vertically */
+        }
+      
+        .registered-card-details {
+          margin-bottom: 10px; /* Add margin to separate details and logo */
+        }
+      }
+      
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        border: 1px solid #888;
+        max-width: 40%;
+        max-height: 50%;
+        border-radius: 10px;
+        overflow-y: auto;
+      }
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 0.7rem;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .modal p,
+      .modal ul,
+      .modal button {
+        font-size: 0.6rem;
+      }
+      /* yeni ödeme */
+      .credit-card-container {
+        width: 150%;
+        height: 180px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #4c4c4c, #1c1c1c);
+        color: white;
+        padding: 15px; /* Değişiklik burada */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+        transition: transform 1s;
+        transform-style: preserve-3d;
+        position: relative;
+        /* margin: 0 -26%; */
+      }
+      .credit-card-container:hover {
+        transform: rotateY(180deg);
+      }
+      .credit-card-container.flip-to-back {
+        transform: rotateY(180deg);
+      }
+      .credit-card-front,
+      .credit-card-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+      }
+      .credit-card-front {
+        display: flex;
+        flex-direction: column;
+      }
+      .credit-card-back {
+        transform: rotateY(180deg);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .credit-card-chip {
+        width: 14%;
+        height: 1.8rem;
+        background-color: #d4af37;
+        border-radius: 4px;
+        margin-bottom: 7%;
+        margin-top: 9%;
+        margin-left: 5%;
+      }
+      .credit-card-number {
+        margin-top: -6%;
+        font-size: 2rem;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      
+      .credit-card-holder {
+        display: inline-block;
+        font-size: 0.7rem;
+        position: absolute;
+        left: 15%;
+        bottom: 20%;
+        white-space: nowrap;
+        max-width: 100%;
+      }
+      
+      .credit-card-expiry {
+        position: absolute;
+        right: 14%;
+        bottom: 20%;
+        font-size: 0.7em;
+        white-space: nowrap;
+      }
+      .payment-form {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .payment-form label {
+        margin: 5px 0;
+      }
+      
+      .payment-form .form-control {
+        padding: 10px;
+        margin: 5px 0 20px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      
+      .black-bar {
+        position: absolute;
+        top: 5%;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        background-color: black;
+        display: none;
+      }
+      .white-bar {
+        position: absolute;
+        top: 30%;
+        left: 0;
+        width: 70%;
+        height: 40px;
+        background-color: white;
+        display: none;
+      }
+      .credit-card-chip2 {
+        width: 14%;
+        height: 1.8rem;
+        background-color: #d4af37;
+        border-radius: 4px;
+        margin-bottom: 7%;
+        margin-top: 35%;
+        margin-right: 80%;
+        display: none;
+      }
+      .credit-card-cvc {
+        display: none;
+        font-size: 1rem;
+        position: absolute;
+        right: 15%;
+        bottom: 50%;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+      }
+      
+      .credit-card-container:hover .black-bar,
+      .credit-card-container:hover .credit-card-chip2,
+      .credit-card-container:hover .credit-card-cvc,
+      .white-bar {
+        display: block;
+      }
+      .credit-card-container:hover .credit-card-front .credit-card-chip,
+      .credit-card-container:hover .credit-card-front .credit-card-number,
+      .credit-card-container:hover .credit-card-front .credit-card-holder,
+      .credit-card-container:hover .credit-card-front .credit-card-expiry {
+        display: none;
+      }
+      .credit-card-container.flip-to-back .black-bar,
+      .credit-card-chip2,
+      .credit-card-cvc,
+      .white-bar {
+        display: block;
+      }
+      /* Media Queries for Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          width: 90%;
+        }
+        .credit-card-container {
+          width: 280px;
+          height: 160px;
+          padding: 15px;
+        }
+        .credit-card-chip,
+        .credit-card-chip2 {
+          width: 12%;
+          height: 1.6rem;
+        }
+        .credit-card-number {
+          font-size: 1.8em;
+        }
+        .credit-card-holder,
+        .credit-card-expiry {
+          font-size: 0.75rem;
+        }
+        .credit-card-cvc {
+          font-size: 0.8rem;
+        }
+        .black-bar,
+        .white-bar {
+          height: 30px;
+        }
+        .payment-form {
+          flex-direction: column;
+        }
+        .form-group {
+          width: 100%;
+        }
+      }
+      @media (max-width: 576px) {
+        .credit-card-container {
+          width: 240px;
+          height: 140px;
+        }
+        .credit-cardchip,
+        .credit-card-chip2 {
+          width: 10%;
+          height: 1.4rem;
+        }
+        .credit-card-number {
+          font-size: 1rem;
+        }
+        .credit-card-holder,
+        .credit-card-expiry {
+          font-size: 0.65rem;
+        }
+        .credit-card-cvc {
+          font-size: 0.7rem;
+        }
+        .black-bar,
+        .white-bar {
+          height: 25px;
+        }
+        .payment-form {
+          flex-direction: column;
+        }
+        .form-group {
+          width: 100%;
+        }
+      }
+    </style>
+
+    <section class="odeme" style="margin-top: 5%">
+      <div class="payment m-auto mt-2">
+        <div class="tab-header d-flex flex-wrap justify-content-center">
+          <a class="tab-link active m-1" style="border-radius: 5px; font-size: 12px" onclick="openTab(event, 'kayitliKartlar')"><i class="fas fa-credit-card" style="font-size: 12px"></i> Kayıtlı Kartlarım</a>
+          <a class="tab-link m-1" style="border-radius: 5px; font-size: 12px" onclick="openTab(event, 'yeniOdeme')"><i class="fas fa-plus" style="font-size: 12px"></i> Yeni Ödeme Seçeneği</a>
+        </div>
+
+        <div id="kayitliKartlar" class="tab-content active">
+          <h5 class="container mt-3 col-lg-10">Kayıtlı Kartlarım</h5>
+          <div class="registered container mt-3">
+            <div class="row">
+              <div class="col-12 mb-3">
+                <div class="registered-card">
+                  <div class="registered-card-header">
+                    <span>ZİRAAT KARTIM</span>
+                    <a href="#" class="edit-link">Düzenle</a>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="registered-card-details">
+                      <p class="fw-bold">123456******1111</p>
+                      <p>1/2029</p>
+                    </div>
+                    <div class="registered-card-logo">
+                      <img src="{% static 'images/ziraatlogo.png' %}" alt="Ziraat Logo" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mb-3">
+                <div class="registered-card">
+                  <div class="registered-card-header">
+                    <span>GARANTİ KARTIM</span>
+                    <a href="#" class="edit-link">Düzenle</a>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="registered-card-details">
+                      <p class="fw-bold">123456******1111</p>
+                      <p>1/2029</p>
+                    </div>
+                    <div class="registered-card-logo">
+                      <img src="{% static 'images/garantilogo.png' %}" alt="Garanti Logo" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mb-3">
+                <div class="registered-card">
+                  <div class="registered-card-header">
+                    <span>ZİRAAT KARTIM</span>
+                    <a href="#" class="edit-link">Düzenle</a>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="registered-card-details">
+                      <p class="fw-bold">123456******1111</p>
+                      <p>1/2029</p>
+                    </div>
+                    <div class="registered-card-logo">
+                      <img src="{% static 'images/ziraatlogo.png' %}" alt="Ziraat Logo" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="yeniOdeme" class="tab-content">
+          <div class="container my-4 py-3 w-75" style="box-shadow: 0 0 5px rgba(0, 0, 0, 0.1)">
+            <div class="row justify-content-center">
+              <div class="col-md-6 d-flex justify-content-center">
+                <div class="credit-card-container col-lg-12 col-xl-10">
+                  <div class="credit-card-front">
+                    <div class="credit-card-chip"></div>
+                    <div class="credit-card-number">•••• •••• •••• ••••</div>
+                    <div class="credit-card-holder">YOUR NAME</div>
+                    <div class="credit-card-expiry">MM/YY</div>
+                  </div>
+                  <div class="credit-card-back">
+                    <div class="black-bar"></div>
+                    <div class="credit-card-chip2"></div>
+                    <div class="white-bar"></div>
+                    <div class="credit-card-cvc">•••</div>
+                  </div>
+                </div>
+              </div>
+              <form class="payment-form mt-4 col-10 mx-auto">
+                <div class="row justify-content-center">
+                  <div class="col-12 col-sm-6 col-md-5 mb-3">
+                    <div class="form-group">
+                      <label for="credit-card-number">Kart Numarası</label>
+                      <input type="text" class="form-control" id="credit-card-number" maxlength="19" required/>
+                      <p id="number-error" style="color: red; display: none">Bu alan boş olamaz</p>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6 col-md-5 mb-3">
+                    <div class="form-group">
+                      <label for="credit-card-holder">Kart Sahibi</label>
+                      <input type="text" class="form-control" id="credit-card-holder" required/>
+                      <p id="holder-error" style="color: red; display: none">Bu alan boş olamaz</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-12 col-sm-6 col-md-5 mb-3">
+                    <div class="form-group">
+                      <label for="credit-card-expiry">Valid Thru</label>
+                      <input type="text" class="form-control" id="credit-card-expiry" maxlength="5" required/>
+                      <p id="expiry-error" style="color: red; display: none">Son kullanma tarihi 12'den büyük olamaz!</p>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6 col-md-5 mb-3">
+                    <div class="form-group">
+                      <label for="credit-card-cvc">Kartı CVC2</label>
+                      <input type="text" class="form-control" id="credit-card-cvc" required/>
+                      <p id="cvc-error" style="color: red; display: none">Bu alan boş olamaz</p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <div class="credit-card-button row col-lg-10 d-flex justify-content-between mx-auto">
+                <button class="border-none my-3 col-lg-5" style="background-color: #5a78a6; border: none; color: white; padding: 10px">Ödeme Yap</button>
+                <button class="border-none my-3 col-lg-5" style="background-color: #5a78a6; border: none; color: white; padding: 10px">Kartı Kaydet</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal -->
+      <div id="editModal" class="modal">
+        <div class="modal-content py-3 px-3">
+          <span class="close">&times;</span>
+          <h8 class="fw-bold">Kayıtlı Kartımı Düzenle</h8>
+          <p class="pt-1">Güvenli ve Pratik bir şekilde kaydettiğiniz kartınızın adını aşağıdaki kutudan değiştirebilirsiniz.</p>
+          <input style="font-size: 0.5rem; margin-bottom: 2%" type="text" id="cardName" value="MAXIMUM KARTIM" />
+          <button onclick="updateCardName()">Kart Adını Güncelle</button>
+          <hr />
+          <p class="fw-bold" style="font-size: 0.8rem">Kayıtlı Kartlarınız Burada Güvende</p>
+          <p>Kartınızı kaydederken kullanmış olduğunuz telefon numarasından, aşağıdaki durumlarda SMS onayı istiyoruz:</p>
+          <ul>
+            <li>Kartınızı kaydederken kullanmış olduğunuz adres dışında başka bir adres seçtiğinizde</li>
+            <li>Kartınızı kaydederken kullanmış olduğunuz adres, e-posta veya telefon numarasında bir değişiklik yaptığınızda</li>
+          </ul>
+          <button onclick="deleteCard()">Yine de Kartı Sil</button>
+        </div>
+      </div>
+    </section>
+    <script>
+document.getElementById('payment-form').addEventListener('submit', function(event) {
+    var isValid = true;
+
+    // Validate CVC length
+    var cvcInput = document.getElementById('credit-card-cvc');
+    if (cvcInput.value.length !== 3) {
+        document.getElementById("cvc-error").style.display = 'block'
+        isValid = false;
+    }
+
+    // Validate credit card number length
+    var cardNumberInput = document.getElementById('credit-card-number');
+    if (cardNumberInput.value.length < 16 || cardNumberInput.value.length > 19) {
+        document.getElementById("number-error").style.display = 'block'
+        isValid = false;
+    }
+
+    var holderInput = document.getElementById('credit-card-holder');
+    if (holderInput.value.length < 2) {
+        document.getElementById("holder-error").style.display = 'block'
+        isValid = false;
+    }
+
+    if (!isValid) {
+        event.preventDefault(); // Prevent form submission if validation fails
+    }
+});
+</script>
+
+    <script>
+      var cardToBeDeleted = null
+      
+      function openTab(evt, tabName) {
+        var i, tabContent, tabLinks
+        tabContent = document.getElementsByClassName('tab-content')
+        for (i = 0; i < tabContent.length; i++) {
+          tabContent[i].style.display = 'none'
+        }
+        tabLinks = document.getElementsByClassName('tab-link')
+        for (i = 0; i < tabLinks.length; i++) {
+          tabLinks[i].className = tabLinks[i].className.replace(' active', '')
+        }
+        document.getElementById(tabName).style.display = 'block'
+        evt.currentTarget.className += ' active'
+      }
+      
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('.tab-link').click()
+        document.querySelectorAll('.edit-link').forEach((link) => {
+          link.addEventListener('click', function (event) {
+            event.preventDefault()
+            document.getElementById('editModal').style.display = 'block'
+            cardToBeDeleted = event.target.closest('.registered-card')
+          })
+        })
+      })
+      
+      function updateCardName() {
+        alert('Kart Adı Güncellendi')
+        document.getElementById('editModal').style.display = 'none'
+      }
+      
+      function deleteCard() {
+        if (cardToBeDeleted) {
+          cardToBeDeleted.remove()
+          cardToBeDeleted = null
+          alert('Kart Silindi')
+        } else {
+          alert('Silinecek kart bulunamadı.')
+        }
+        document.getElementById('editModal').style.display = 'none'
+      }
+      
+      var modal = document.getElementById('editModal')
+      var span = document.getElementsByClassName('close')[0]
+      span.onclick = function () {
+        modal.style.display = 'none'
+      }
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = 'none'
+        }
+      }
+    </script>
+    <!-- kart adını güncelle -->
+    <script>
+      function updateCardName() {
+        // Yeni kart adını al
+        var newCardName = document.getElementById('cardName').value
+      
+        // Kart adını güncelle (örneğin, span etiketinin içine yerleştir)
+        if (cardToBeDeleted) {
+          cardToBeDeleted.querySelector('.registered-card-header span').textContent = newCardName
+        }
+      
+        // Kullanıcıya güncelleme işleminin başarılı olduğunu bildir
+        alert('Kart Adı Güncellendi')
+      
+        // Modalı kapat
+        document.getElementById('editModal').style.display = 'none'
+      }
+    </script>
+    <!-- kartı silme -->
+    <script>
+      function deleteCard() {
+        if (cardToBeDeleted) {
+          cardToBeDeleted.remove()
+          cardToBeDeleted = null
+          alert('Kart Silindi')
+        } else {
+          alert('Silinecek kart bulunamadı.')
+        }
+        document.getElementById('editModal').style.display = 'none'
+      }
+    </script>
+    <script>
+      var cardToBeDeleted = null
+      
+      function openTab(evt, tabName) {
+        var i, tabContent, tabLinks
+        tabContent = document.getElementsByClassName('tab-content')
+        for (i = 0; i < tabContent.length; i++) {
+          tabContent[i].style.display = 'none'
+        }
+        tabLinks = document.getElementsByClassName('tab-link')
+        for (i = 0; i < tabLinks.length; i++) {
+          tabLinks[i].className = tabLinks[i].className.replace(' active', '')
+        }
+        document.getElementById(tabName).style.display = 'block'
+        evt.currentTarget.className += ' active'
+      }
+      
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('.tab-link').click()
+        document.querySelectorAll('.edit-link').forEach((link) => {
+          link.addEventListener('click', function (event) {
+            event.preventDefault()
+            document.getElementById('editModal').style.display = 'block'
+            cardToBeDeleted = event.target.closest('.registered-card')
+          })
+        })
+      })
+      
+      function updateCardName() {
+        alert('Kart Adı Güncellendi')
+        document.getElementById('editModal').style.display = 'none'
+      }
+      
+      function deleteCard() {
+        if (cardToBeDeleted) {
+          cardToBeDeleted.remove()
+          cardToBeDeleted = null
+          alert('Kart Silindi')
+        } else {
+          alert('Silinecek kart bulunamadı.')
+        }
+        document.getElementById('editModal').style.display = 'none'
+      }
+      
+      var modal = document.getElementById('editModal')
+      var span = document.getElementsByClassName('close')[0]
+      span.onclick = function () {
+        modal.style.display = 'none'
+      }
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = 'none'
+        }
+      }
+    </script>
+    <!-- YENİ ÖDEME -->
+    <script>
+      document.getElementById('credit-card-number').addEventListener('input', function () {
+        let cardNumber = this.value
+          .replace(/\D/g, '')
+          .slice(0, 16)
+          .replace(/(.{4})/g, '$1 ')
+          .trim()
+      
+        this.value = cardNumber
+        document.querySelector('.credit-card-number').textContent = cardNumber || '•••• •••• •••• ••••'
+      })
+      
+      document.getElementById('credit-card-number').addEventListener('keypress', function (e) {
+        if (!/\d/.test(e.key)) {
+          e.preventDefault()
+        }
+      })
+    </script>
+    <script>
+      document.getElementById('credit-card-holder').addEventListener('input', function () {
+        let holderName = this.value.replace(/[^a-zA-ZçğıöşüÇĞİÖŞÜ\s]/g, '') || 'YOUR NAME'
+        let cardHolderElement = document.querySelector('.credit-card-holder')
+      
+        let nameWidth = cardHolderElement.offsetWidth
+        let cardInnerWidth = document.querySelector('.credit-card-front').offsetWidth
+      
+        if (nameWidth > cardInnerWidth) {
+          cardHolderElement.style.width = cardInnerWidth + 'px'
+          cardHolderElement.style.overflow = 'hidden'
+        } else {
+          cardHolderElement.style.width = 'auto'
+          cardHolderElement.style.overflow = 'visible'
+        }
+      
+        cardHolderElement.textContent = holderName
+      })
+      
+      document.getElementById('credit-card-holder').addEventListener('keypress', function (e) {
+        if (!/[a-zA-ZçğıöşüÇĞİÖŞÜ\s]/.test(e.key)) {
+          e.preventDefault()
+        }
+      })
+    </script>
+    <script>
+      document.getElementById('credit-card-expiry').addEventListener('input', function (e) {
+        let inputValue = e.data
+        if (inputValue && isNaN(parseInt(inputValue))) {
+          // Eğer giriş verisi bir rakam değilse, girişten çık
+          this.value = this.value.slice(0, -1)
+          return
+        }
+      
+        // Girişten sadece rakamları al ve maksimum uzunluk 4'e ayarla
+        let expiry = this.value.replace(/\D/g, '').slice(0, 4)
+      
+        // Tarihi MM/YY formatına getir
+        if (expiry.length > 2) {
+          expiry = expiry.slice(0, 2) + '/' + expiry.slice(2)
+        }
+      
+        this.value = expiry
+      
+        // Eğer sadece ilk 2 rakam girildiyse ve '/' yoksa, ekle
+        if (expiry.length === 2 && !expiry.includes('/')) {
+          this.value = expiry + '/'
+          this.setSelectionRange(3, 3) // Seçim aralığını ayarla
+        }
+      
+        // Ayı çıkarma işlemi
+        let month = parseInt(expiry.slice(0, 2))
+        if (month > 12) {
+          // Eğer ay 12'den büyükse, hata mesajını göster
+          document.getElementById('expiry-error').style.display = 'block'
+          this.value = expiry.slice(0, 1) // İlk rakamı koru, diğerlerini sil
+          document.querySelector('.credit-card-expiry').textContent = 'MM/YY'
+        } else {
+          // Geçerli ayı göster
+          document.getElementById('expiry-error').style.display = 'none'
+          document.querySelector('.credit-card-expiry').textContent = expiry || 'MM/YY'
+        }
+      })
+    </script>
+    <script>
+      document.getElementById('credit-card-cvc').addEventListener('input', function () {
+        let cvc = this.value.replace(/\D/g, '').slice(0, 3)
+        this.value = cvc
+        document.querySelector('.credit-card-cvc').textContent = cvc || '•••'
+      
+        document.querySelector('.credit-credit-card-container').classList.add('flip-to-back')
+      })
+      
+      document.getElementById('credit-card-cvc').addEventListener('focus', function () {
+        document.querySelector('.credit-card-container').classList.add('flip-to-back')
+      })
+      
+      document.getElementById('credit-card-cvc').addEventListener('blur', function () {
+        document.querySelector('.credit-card-container').classList.remove('flip-to-back')
+      })
+    </script>
+  </head>
+</html>

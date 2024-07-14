@@ -1,0 +1,223 @@
+
+body {
+  font-family: "Rubik", sans-serif;
+}
+
+
+ /* reklam */
+ .advertisement-wrapper {
+  margin-top: 5px;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.advertisement-frame {
+  overflow: hidden;
+  max-width: 1200px;
+  width: 100%;
+  position: relative;
+}
+
+.advertisement-banner {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.advertisement-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: inherit;
+  object-position: center;
+}
+
+.advertisement-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: whitesmoke;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 46%;
+  min-height: 30%;
+  text-align: left;
+  overflow: hidden;
+}
+
+.advertisement-arrows {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1;
+}
+
+.advertisement-arrow {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.advertisement-arrow:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.advertisement-icon {
+  font-size: 24px;
+  font-weight: bold;
+  transition: transform 0.3s;
+}
+
+.advertisement-arrow:hover .advertisement-icon {
+  transform: scale(1.1);
+}
+
+.advertisement-expanded {
+  white-space: normal !important;
+}
+@media (max-width: 768px) {
+  .advertisement-content {
+    width: 80%;
+    padding: 10px;
+    min-height: auto;
+    max-width: 400px;
+  }
+}
+@media (max-width: 1200px) {
+  .advertisement-frame {
+    max-width: 90%;
+  }
+  .advertisement-banner img {
+    width: 100%;
+  }
+}
+/* populer dersler */
+.PopularTitle {
+  margin-top: 5%;
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-left: 8%;
+}
+
+.PopularBox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 10px;
+}
+
+.PopularBoxItem {
+  width: calc(33.33% - 20px); /* 3 sütunlu düzen için genişlik */
+  max-width: 300px; /* Maksimum genişlik */
+  margin: 10px;
+  border: 2px solid #000; /* Border'ı değiştirildi */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+  transition: transform 0.5s ease;
+}
+
+.PopularBoxImg:hover img {
+  transform: scale(1.2);
+}
+
+@media screen and (max-width: 768px) {
+  .PopularBoxItem {
+    width: calc(50% - 20px); /* 2 sütunlu düzen için genişlik */
+  }
+
+  .PopularTitle {
+    font-size: 1.2rem; /* Başlık boyutunu küçült */
+    margin-left: 5%; /* Başlık sol kenar boşluğunu ayarla */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .PopularTitle {
+    font-size: 1rem; /* Başlık boyutunu daha da küçült */
+    margin-left: 2%; /* Başlık sol kenar boşluğunu daha da azalt */
+  }
+
+  .PopularBoxItem {
+    width: calc(100% - 20px); /* Tek sütunlu düzen için genişlik */
+  }
+}
+
+/* Blog Part */
+.BlogPart {
+  border-radius: 15px;
+  width: 80%;
+  float: left;
+  margin: 10px;
+}
+
+
+
+
+/* Footer */
+.SwapFooter {
+  color: #ffffff;
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+ .footer-section {
+  flex: 1;
+  text-align: left;
+  border-bottom: 2px solid white;
+  margin-bottom: 20px;
+ }
+
+.footer-section p {
+  margin-bottom: 10px;
+  font: normal normal medium 18px/40px Rubik;
+  font-weight: bolder;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section li {
+  margin-bottom: 5px;
+  font: normal normal normal 16px/30px Rubik;
+}
+
+.vertical-line {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  width: 2px;
+  background-color: #ffffff;
+  margin: 0 10px;
+}
+
+
+
+      

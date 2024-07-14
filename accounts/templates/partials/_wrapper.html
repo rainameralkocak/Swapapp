@@ -1,0 +1,389 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-vyKT1cCf1FF3Ojt9eBkOrmdzlKZaB0Uz/1en3hAkYbkZ5njutVBi5Gw66cuW2kW6BFLJca8C3Wcyf5gi+zoMOw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      body {
+        font-family: "Rubik", sans-serif;
+      }
+      /*smartbar*/
+      .left-content {
+        display: flex;
+        align-items: center;
+      }
+
+      .date {
+        font: normal normal normal 14px/8px Rubik;
+      }
+
+      .welcome {
+        font: normal normal medium 18px/8px Rubik;
+        margin-top: -4px;
+      }
+
+      .smart-bar-text {
+        font: normal normal 19px/8px Rubik;
+        color: #ffffff;
+        text-decoration: none;
+      }
+
+      /* Close button  */
+      #closeBtn {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        color: #ffffff;
+        position: relative;
+        right: 10px;
+      }
+
+      #closeBtn:hover {
+        color: #cccccc;
+      }
+
+      @media only screen and (max-width: 1080px) {
+        .container-fluid {
+          display: none;
+        }
+      }
+
+      /* reklam */
+      .advertisement-wrapper {
+        margin-top: 5px;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 200;
+        opacity: 0.99;
+      }
+
+      .advertisement-frame {
+        overflow: hidden;
+        max-width: 1200px;
+        width: 100%;
+        position: relative;
+        z-index: 300;
+      }
+
+      .advertisement-banner {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        z-index: 400;
+      }
+
+      .advertisement-banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: inherit;
+        object-position: center;
+        z-index: 350;
+      }
+
+      .advertisement-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: whitesmoke;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 46%;
+        min-height: 30%;
+        text-align: left;
+        overflow: hidden;
+      }
+
+      .advertisement-arrows {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        z-index: 1;
+      }
+
+      .advertisement-arrow {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .advertisement-arrow:hover {
+        background-color: #000;
+        color: #fff;
+      }
+
+      .advertisement-icon {
+        font-size: 24px;
+        font-weight: bold;
+        transition: transform 0.3s;
+      }
+
+      .advertisement-arrow:hover .advertisement-icon {
+        transform: scale(1.1);
+      }
+
+      .advertisement-expanded {
+        white-space: normal !important;
+      }
+      @media (max-width: 768px) {
+        .advertisement-content {
+          width: 80%;
+          padding: 10px;
+          min-height: auto;
+          max-width: 400px;
+        }
+      }
+      @media (max-width: 1200px) {
+        .advertisement-frame {
+          max-width: 90%;
+        }
+        .advertisement-banner img {
+          width: 100%;
+        }
+      }
+      /* populer dersler */
+      .PopularTitle {
+        font-weight: bold;
+        font-size: 1.5rem;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .PopularBoxItem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 10px;
+        text-align: center;
+      }
+
+      .PopularBoxImg {
+        background: none;
+        border: none;
+        padding: 0;
+        margin-bottom: 10px;
+      }
+
+      .PopularBoxImg img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .PopularBoxText {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .PopularBoxText span {
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+      }
+      .PopularBoxImg img {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+        margin-bottom: 7%;
+        margin-right: 0;
+        margin-left: 0;
+      }
+
+      .PopularBoxImg:hover img {
+        transform: scale(1.2);
+      }
+
+      .PopularBoxItem button {
+        padding: 0;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+      }
+      /* Sponsor */
+      .sponsorlogos {
+        margin-top: 20px;
+      }
+
+      .sponsorlogos img {
+        width: 100px;
+        height: auto;
+        margin: 0 10px;
+      }
+
+      /* Blog Part */
+      .BlogPart {
+        border-radius: 15px;
+        width: 80%;
+        float: left;
+        margin: 10px;
+      }
+
+      /* Footer */
+      .SwapFooter {
+        color: #ffffff;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .footer-section {
+        flex: 1;
+        text-align: left;
+        border-bottom: 2px solid white;
+        margin-bottom: 20px;
+      }
+
+      .footer-section p {
+        margin-bottom: 10px;
+        font: normal normal medium 18px/40px Rubik;
+        font-weight: bolder;
+      }
+
+      .footer-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .footer-section li {
+        margin-bottom: 5px;
+        font: normal normal normal 16px/30px Rubik;
+      }
+
+      .vertical-line {
+        content: "";
+        display: inline-block;
+        height: 100%;
+        width: 2px;
+        background-color: #ffffff;
+        margin: 0 10px;
+      }
+    </style>
+    <title>SWAP</title>
+  </head>
+  <body>
+    <section class="advertisement-wrapper" style="margin-top: 7%">
+      <div class="advertisement-frame">
+        <div class="advertisement-banner">
+          <div class="advertisement-arrows">
+            <div class="advertisement-arrow" id="advertisement-prev">
+              <div class="advertisement-icon">&lt;</div>
+            </div>
+            <div class="advertisement-arrow" id="advertisement-next">
+              <div class="advertisement-icon">&gt;</div>
+            </div>
+          </div>
+          <img src="{% static 'images/reklam9.jpg' %}" alt="Reklam 1" />
+          <div class="advertisement-content">
+            <div id="advertisement-text">
+              <h3 class="advertisement-title fw-bold pb-2">Eğitimde Sınırları Kaldırın: Birebir Öğrenmeyle Bilgiye Ulaşın!</h3>
+              <p class="advertisement-explanation">
+                Bilgiye ulaşmanın en etkili yolu, kendi programınıza uygun saatlerde hocalarımızla birebir ders yaparak öğrenmektir. Eğitimde sınırları kaldırarak, size özel
+                derslerimizle her öğrenme ihtiyacınızı karşılıyoruz!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const images = ["{% static 'images/reklam9.jpg' %}", "{% static 'images/reklam8.jpg' %}", "{% static 'images/reklam7.jpg' %}"];
+      const titles = [
+        "<h4><strong>Eğitimde Sınırları Kaldırın! Yeni Bir Döneme Hazır Mısınız?</strong></h4>",
+        "<h4><strong>Yeni Bir Deneyime Hazır Olun!</strong></h4>",
+        "<h4><strong>Bilgiye Ulaşmak Artık Daha Kolay!</strong></h4>",
+      ];
+      const texts = [
+        "Birebir Öğrenmeyle Bilgiye Ulaşın! Bilgiye ulaşmanın en etkili yolu, kendi programınıza uygun saatlerde hocalarımızla birebir ders yaparak öğrenmektir. Eğitimde sınırları kaldırarak, size özel derslerimizle her öğrenme ihtiyacınızı karşılıyoruz!",
+        "Yeni bir deneyime hazır olun! Her adımınızı destekleyecek bir eğitim ortamı için doğru yerdesiniz. Sınırları aşın ve hedeflerinize bir adım daha yaklaşın!",
+        "Hazır mısınız? Yepyeni bir döneme başlamak için doğru yerdesiniz. Bireysel ihtiyaçlarınıza özel eğitimlerimizle bilgiye ulaşmak artık çok daha kolay ve etkili!",
+      ];
+      let current = 0;
+
+      const imgElement = document.querySelector(".advertisement-banner img");
+      const textElement = document.querySelector("#advertisement-text");
+
+      const prevButton = document.getElementById("advertisement-prev");
+      const nextButton = document.getElementById("advertisement-next");
+
+      function updateBanner() {
+        imgElement.src = images[current];
+        textElement.innerHTML = `<h3 class="advertisement-title fw-bold pb-2">${titles[current]}</h3><p class="advertisement-explanation">${texts[current]}</p>`;
+      }
+
+      prevButton.addEventListener("mouseenter", () => {
+        prevButton.style.backgroundColor = "#000";
+        prevButton.querySelector(".advertisement-icon").style.color = "#fff";
+        prevButton.innerHTML = '<div class="advertisement-icon">&larr;</div>';
+      });
+
+      prevButton.addEventListener("mouseleave", () => {
+        prevButton.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
+        prevButton.querySelector(".advertisement-icon").style.color = "#000";
+        prevButton.innerHTML = '<div class="advertisement-icon">&lt;</div>';
+      });
+
+      nextButton.addEventListener("mouseenter", () => {
+        nextButton.style.backgroundColor = "#000";
+        nextButton.querySelector(".advertisement-icon").style.color = "#fff";
+        nextButton.innerHTML = '<div class="advertisement-icon">&rarr;</div>';
+      });
+
+      nextButton.addEventListener("mouseleave", () => {
+        nextButton.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
+        nextButton.querySelector(".advertisement-icon").style.color = "#000";
+        nextButton.innerHTML = '<div class="advertisement-icon">&gt;</div>';
+      });
+
+      prevButton.addEventListener("click", () => {
+        current = current === 0 ? images.length - 1 : current - 1;
+        updateBanner();
+      });
+
+      nextButton.addEventListener("click", () => {
+        current = current === images.length - 1 ? 0 : current + 1;
+        updateBanner();
+      });
+
+      textElement.addEventListener("click", () => {
+        textElement.classList.toggle("expanded");
+      });
+
+      updateBanner();
+    </script>
+  </body>
+</html>

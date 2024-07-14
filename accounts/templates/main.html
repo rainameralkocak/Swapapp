@@ -1,0 +1,7 @@
+{% load static %}
+
+    {% if user.is_authenticated %}
+    {% include "authenticated.html" %}
+    {% else %}
+    {% include 'unauthenticated.html' %}
+    {% endif %}

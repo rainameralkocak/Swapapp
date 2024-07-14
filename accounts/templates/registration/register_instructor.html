@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register to SWAP</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style-register.css' %}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .form-box {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .form-box h1 {
+            font-family: Arial, sans-serif;
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-box img {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            right: 90px;
+        }
+
+        .input-field {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .alert-danger {
+            color: red;
+            font-weight: bold;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="form-box">
+            <h1>SWAP'A Kayıt Ol</h1>
+            <img src="{% static 'images/logoTransparent.png' %}" alt="Logo" />
+            <h4>Eğitmen Kaydı</h4>
+            <form method="POST" id="Register" class="input-group">
+                {% csrf_token %}
+                {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+                {% endif %}
+                <label for="username"></label>
+                <input type="text" id="username" name="username" class="input-field" placeholder="Enter Username" required>
+                <label for="password"></label>
+                <input type="password" id="password" name="password" class="input-field" placeholder="Enter Password" required>
+                <label for="repassword"></label>
+                <input type="password" id="repassword" name="repassword" class="input-field" placeholder="Enter Re-Password" required>
+                <label for="email"></label>
+                <input type="email" id="email" name="email" class="input-field" placeholder="Enter Email" required>
+                <a onclick="window.location.href='{% url 'policy' %}'">Kayıt olarak Şartları, Veri Politikasını ve Çerez Politikasını kabul etmiş olursunuz.</a>
+                <button type="submit" class="submit-btn">Kayıt Ol</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

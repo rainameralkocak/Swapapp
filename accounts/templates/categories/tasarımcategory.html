@@ -1,0 +1,804 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-vyKT1cCf1FF3Ojt9eBkOrmdzlKZaB0Uz/1en3hAkYbkZ5njutVBi5Gw66cuW2kW6BFLJca8C3Wcyf5gi+zoMOw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      body {
+        font-family: "Rubik", sans-serif;
+      }
+      /*smartbar*/
+      .left-content {
+        display: flex;
+        align-items: center;
+      }
+
+      .date {
+        font: normal normal normal 14px/8px Rubik;
+      }
+
+      .welcome {
+        font: normal normal medium 18px/8px Rubik;
+        margin-top: -4px;
+      }
+
+      .smart-bar-text {
+        font: normal normal 19px/8px Rubik;
+        color: #ffffff;
+        text-decoration: none;
+      }
+
+      /* Close button style */
+      #closeBtn {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        color: #ffffff;
+        position: relative;
+        right: 10px;
+      }
+
+      #closeBtn:hover {
+        color: #cccccc;
+      }
+
+      @media only screen and (max-width: 1080px) {
+        .container-fluid {
+          display: none;
+        }
+      }
+
+      .carousel-scroll-container {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        margin-top: 10px;
+      }
+
+      .carousel-scroll-content {
+        display: inline-block;
+        white-space: nowrap;
+      }
+
+      .carousel-module-scroll-port-ViaiR {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+
+      .carousel-module-scroll-item {
+        flex: 0 0 auto;
+        margin-right: 15px;
+        width: 300px;
+        box-sizing: border-box;
+        background-color: #728bb2;
+      }
+      .carousel-module-scroll-item:hover {
+        background-color: #d1d7dc;
+      }
+
+      .instructor-card {
+        display: flex;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+      }
+
+      .instructor-card-img {
+        flex: 0 0 auto;
+        margin-right: 15px;
+        padding-right: 15px;
+      }
+
+      .instructor-card-details {
+        flex: 1;
+        padding-left: 15px;
+      }
+
+      .instructor-card img {
+        border-radius: 50%;
+        max-width: 100%;
+        height: auto;
+      }
+
+      .instructor-card-details a {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+      }
+
+      .instructor-card-label {
+        margin-top: 5px;
+        font-size: 14px;
+        color: black;
+      }
+
+      .instructor-card-rating {
+        margin-top: 5px;
+        font-size: 14px;
+        color: black;
+      }
+
+      .carousel-banner-container {
+        text-align: left;
+      }
+      .popular-instructors-unit-title {
+        margin-top: 10px;
+      }
+      .carousel-topic-module-scroll-item {
+        flex: 0 0 auto;
+        margin-right: 15px;
+        width: 300px;
+        box-sizing: border-box;
+        background-color: #d1d7dc;
+      }
+      .carousel-topic-module-scroll-item:hover {
+        background-color: #728bb2;
+      }
+
+      .topic-card {
+        display: flex;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        background-color: #728bb2;
+        color: white;
+      }
+
+      .topic-card:hover {
+        background-color: #d1d7dc;
+        color: #333;
+      }
+
+      .topic-card-details {
+        flex: 1;
+        padding-left: 15px;
+      }
+
+      .topic-card img {
+        border-radius: 50%;
+        max-width: 100%;
+        height: auto;
+      }
+
+      .topic-card-details a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .topic-card-details a:hover {
+        color: #333;
+      }
+
+      .topic-card-label,
+      .topic-card-rating {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .popular-topic-unit-title {
+        margin-top: 10px;
+      }
+
+      /* tüm kurslar  */
+      .card-courses {
+        border-radius: 15px;
+        width: 70%;
+        margin: 10px auto;
+      }
+      .row-cols-md-2 > * {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+
+      @media (max-width: 767px) {
+        .courses-select {
+          flex-direction: column;
+          align-items: center;
+        }
+        .me-5 {
+          margin-bottom: 0;
+        }
+
+        #select-sort {
+          width: 150px;
+        }
+
+        #select-sort option {
+          font-size: 14px;
+        }
+      }
+      /* Footer */
+      .SwapFooter {
+        color: #ffffff;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .footer-section {
+        flex: 1;
+        text-align: left;
+        border-bottom: 2px solid white;
+        margin-bottom: 20px;
+      }
+
+      .footer-section p {
+        margin-bottom: 10px;
+        font: normal normal medium 18px/40px Rubik;
+        font-weight: bolder;
+      }
+
+      .footer-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .footer-section li {
+        margin-bottom: 5px;
+        font: normal normal normal 16px/30px Rubik;
+      }
+
+      .vertical-line {
+        content: "";
+        display: inline-block;
+        height: 100%;
+        width: 2px;
+        background-color: #ffffff;
+        margin: 0 10px;
+      }
+    </style>
+
+    <title>Document</title>
+  </head>
+  <body>
+    {% include 'partials/_smartbar.html' %}
+    {% if user.is_authenticated %}
+    {% include 'partials/mainafternavbar.html' %}
+    {% else %}
+    {% include 'partials/mainnavbar.html' %}
+    {% endif %}
+    
+    <section class="popularInstructor container" style="margin-top: 20px; max-width: 80%">
+      <div class="carousel-banner-container">
+        <h2 id="popularInstructorsHeading" class="ud-heading-xl popular-instructors-unit-title fw-bold" data-purpose="title">Popüler Eğitmenler</h2>
+      </div>
+      <div class="carousel-scroll-container">
+        <div class="carousel-scroll-content">
+          <section aria-label="Carousel" class="carousel-module-container d-flex y py-5">
+            <div
+              class="popular-instructors-unit-instructor-grid-columns carousel-module-scroll-port-ViaiR carousel-module-grid-nU76k carousel-module-scroll-lock"
+              data-purpose="scroll-port"
+              data-testid="scroll-port"
+              id="scroll-port"
+              aria-live="polite"
+            >
+              <div data-index="0" class="carousel-module-scroll-item">
+                <div class="instructor-card" >
+                  <div class="ud-custom-focus-target item-card-module-image-wrapper">
+                    <img
+                      src="{% static 'images/teacher-1.jpg'%}"
+                      alt=""
+                      class="ud-avatar ud-avatar-image"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      style="width: 64px; height: 64px"
+                    />
+                  </div>
+                  <div class="instructor-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold instructor-card-title ud-focus-visible-target item-card-module-item-card-title">Raina Meral Koçak</a>
+                    </div>
+                    <div class="instructor-card-label">Tasarım</div>
+                    <div class="instructor-card-rating">
+                      <span class="star-rating-module-rating-number" aria-hidden="true" data-purpose="rating-number">4,7</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                        <path
+                          d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                        />
+                      </svg>
+                      <span class="instructor-card-rating-title">Eğitmen puanı</span>
+                    </div>
+                    <div><span class="ud-text-bold">119.354</span> öğrenci</div>
+                    <div><span class="ud-text-bold">8</span> kurs</div>
+                  </div>
+                </div>
+              </div>
+              <div data-index="1" class="carousel-module-scroll-item">
+                <div class="instructor-card" >
+                  <div class="ud-custom-focus-target item-card-module-image-wrapper">
+                    <img
+                      src="{% static 'images/teacher-2.jpg'%}"
+                      alt=""
+                      class="ud-avatar ud-avatar-image"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      style="width: 64px; height: 64px"
+                    />
+                  </div>
+                  <div class="instructor-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold instructor-card-title ud-focus-visible-target item-card-module-item-card-title">Hatice Özçelik</a>
+                    </div>
+                    <div class="instructor-card-label">Tasarım</div>
+                    <div class="instructor-card-rating">
+                      <span class="star-rating-module-rating-number" aria-hidden="true" data-purpose="rating-number">4,5</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                        <path
+                          d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                        />
+                      </svg>
+                      <span class="instructor-card-rating-title">Eğitmen puanı</span>
+                    </div>
+                    <div><span class="ud-text-bold">50.249</span> öğrenci</div>
+                    <div><span class="ud-text-bold">45</span> kurs</div>
+                  </div>
+                </div>
+              </div>
+              <div data-index="2" class="carousel-module-scroll-item">
+                <div class="instructor-card" >
+                  <div class="ud-custom-focus-target item-card-module-image-wrapper">
+                    <img
+                      src="{% static 'images/teacher-1.jpg'%}"
+                      alt=""
+                      class="ud-avatar ud-avatar-image"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      style="width: 64px; height: 64px"
+                    />
+                  </div>
+                  <div class="instructor-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold instructor-card-title ud-focus-visible-target item-card-module-item-card-title">Ayşenur Çiğdem Buke</a>
+                    </div>
+                    <div class="instructor-card-label">Tasarım</div>
+                    <div class="instructor-card-rating">
+                      <span class="star-rating-module-rating-number" aria-hidden="true" data-purpose="rating-number">4,8</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                        <path
+                          d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                        />
+                      </svg>
+                      <span class="instructor-card-rating-title">Eğitmen puanı</span>
+                    </div>
+                    <div><span class="ud-text-bold">28.719</span> öğrenci</div>
+                    <div><span class="ud-text-bold">12</span> kurs</div>
+                  </div>
+                </div>
+              </div>
+              <div data-index="3" class="carousel-module-scroll-item">
+                <div class="instructor-card" >
+                  <div class="ud-custom-focus-target item-card-module-image-wrapper">
+                    <img
+                      src="{% static 'images/teacher-2.jpg'%}"
+                      alt=""
+                      class="ud-avatar ud-avatar-image"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      style="width: 64px; height: 64px"
+                    />
+                  </div>
+                  <div class="instructor-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold instructor-card-title ud-focus-visible-target item-card-module-item-card-title">Bengisu Koçak</a>
+                    </div>
+                    <div class="instructor-card-label">Tasarım</div>
+                    <div class="instructor-card-rating">
+                      <span class="star-rating-module-rating-number" aria-hidden="true" data-purpose="rating-number">4,8</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                        <path
+                          d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                        />
+                      </svg>
+                      <span class="instructor-card-rating-title">Eğitmen puanı</span>
+                    </div>
+                    <div><span class="ud-text-bold">28.719</span> öğrenci</div>
+                    <div><span class="ud-text-bold">12</span> kurs</div>
+                  </div>
+                </div>
+              </div>
+              <div data-index="4" class="carousel-module-scroll-item">
+                <div class="instructor-card" >
+                  <div class="ud-custom-focus-target item-card-module-image-wrapper">
+                    <img
+                      src="{% static 'images/teacher-1.jpg'%}"
+                      alt=""
+                      class="ud-avatar ud-avatar-image"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      style="width: 64px; height: 64px"
+                    />
+                  </div>
+                  <div class="instructor-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold instructor-card-title ud-focus-visible-target item-card-module-item-card-title">Canan Tepe</a>
+                    </div>
+                    <div class="instructor-card-label">Tasarım</div>
+                    <div class="instructor-card-rating">
+                      <span class="star-rating-module-rating-number" aria-hidden="true" data-purpose="rating-number">4,8</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                        <path
+                          d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                        />
+                      </svg>
+                      <span class="instructor-card--rating-title--tbtOH">Eğitmen puanı</span>
+                    </div>
+                    <div><span class="ud-text-bold">28.719</span> öğrenci</div>
+                    <div><span class="ud-text-bold">12</span> kurs</div>
+                  </div>
+                </div>
+              </div>
+              <div data-index="5" class="carousel-module-scroll-item">
+                <div class="instructor-card" >
+                  <div class="ud-custom-focus-target item-card-module-image-wrapper">
+                    <img
+                      src="{% static 'images/teacher-2.jpg'%}"
+                      alt=""
+                      class="ud-avatar ud-avatar-image"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      style="width: 64px; height: 64px"
+                    />
+                  </div>
+                  <div class="instructor-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold instructor-card-title ud-focus-visible-target item-card-module-item-card-title">Kader Özbek</a>
+                    </div>
+                    <div class="instructor-card-label">Tasarım</div>
+                    <div class="instructor-card-rating">
+                      <span class="star-rating-module-rating-number" aria-hidden="true" data-purpose="rating-number">4,8</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                        <path
+                          d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                        />
+                      </svg>
+                      <span class="instructor-card--rating-title--tbtOH">Eğitmen puanı</span>
+                    </div>
+                    <div><span class="ud-text-bold">28.719</span> öğrenci</div>
+                    <div><span class="ud-text-bold">12</span> kurs</div>
+                  </div>
+                </div>
+              </div>
+              <div data-index="6" class="carousel-module-scroll-item">
+                <div class="instructor-card" >
+                  <div class="ud-custom-focus-target item-card-module-image-wrapper">
+                    <img
+                      src="{% static 'images/teacher-1.jpg'%}"
+                      alt=""
+                      class="ud-avatar ud-avatar-image"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      style="width: 64px; height: 64px"
+                    />
+                  </div>
+                  <div class="instructor-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold instructor-card-title ud-focus-visible-target item-card-module-item-card-title-">Neslihan Acar</a>
+                    </div>
+                    <div class="instructor-card-label">Tasarım</div>
+                    <div class="instructor-card-rating">
+                      <span class="star-rating-module-rating-number" aria-hidden="true" data-purpose="rating-number">4,8</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                        <path
+                          d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                        />
+                      </svg>
+                      <span class="instructor-card--rating-title--tbtOH">Eğitmen puanı</span>
+                    </div>
+                    <div><span class="ud-text-bold">28.719</span> öğrenci</div>
+                    <div><span class="ud-text-bold">12</span> kurs</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+    <section class="Topic-card-banner mb-5">
+      <div class="container d-flex justify-content-center align-items-center" style="max-width: 80%">
+        <div class="container">
+          <div class="carousel-banner-container col-lg-4 justify-content-start my-5">
+            <h2 id="populartopicHeading" class="ud-heading-xl popular-topic-unit-title fw-bold" data-purpose="title">Çok Aranan Konular</h2>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <div class="topic-card" onclick="window.location.href='{% url "ictasarim" %}';">
+                  <div class="topic-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold topic-card-title ud-focus-visible-target item-card-module-item-card-title">İç Tasarım</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="topic-card" onclick="window.location.href='{% url "mimarlik" %}';">
+                  <div class="topic-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold topic-card-title ud-focus-visible-target item-card-module-item-card-title">Mimarlık</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <div class="topic-card" onclick="window.location.href='{% url "oyuntasarim" %}';">
+                  <div class="topic-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold topic-card-title ud-focus-visible-target item-card-module-item-card-title">Oyun Tasarım</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="topic-card" onclick="window.location.href='{% url "modatasarim" %}';">
+                  <div class="topic-card-details">
+                    <div>
+                      <a href="#" class="ud-text-md ud-text-bold topic-card-title ud-focus-visible-target item-card-module-item-card-title">Moda Tasarım</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="courses container" style="margin-top: 20px; max-width: 80%">
+      <div class="courses-title justify-content-between align-items-center my-4">
+        <div class="courses-select d-flex pt-5">
+          <h2 class="ud-heading-xl me-5 col-lg-8 justify-content-start fw-bold">Tüm Kurslar</h2>
+          <div class="ms-5 mt-3 col-lg-4 d-flex">
+            <label for="select-title" class="fw-bold mt-2">Sırala:&nbsp;&nbsp;</label>
+            <select id="select-sort" onchange="sortCourses()">
+              <option value="default">Seçenekler</option>
+              <option value="priceHigh">Fiyata Göre En Yüksek</option>
+              <option value="ratingHigh">Puana Göre En Yüksek</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="card-courses shadow-sm mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-12 pl-0 pl-lg-0 col-lg-5">
+            <img src="{% static 'images/tasarım1.jpg'%}" alt="Web Tasarım" class="card-courses-img mg-fluid w-100 rounded" />
+          </div>
+          <div class="col">
+            <div class="card-info">
+              <div class="card-title fw-bold"><h4>Web Tasarım Temelleri</h4></div>
+              <div class="card-description">Temel web tasarım prensipleri ve teknikleri.</div>
+              <div class="card-teacher">Öğretmen: Ayşe Yılmaz</div>
+              <div class="d-flex">
+                <div class="card-rating">Puan: 4.6</div>
+                <svg class="mx-2 my-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                  <path
+                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                  />
+                </svg>
+              </div>
+              <div class="card-price fw-bold">Fiyat: ₺79.99</div>
+              <button class="my-3" style="background-color: #5a78a6; border: none; color: white" 
+              {% if user.is_authenticated %}
+              onclick="window.location.href='{% url 'calender' %}'"
+              {% else %}
+              onclick="window.location.href='{% url 'login' %}'"
+              {% endif %}>Satın Al</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-courses shadow-sm mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-12 pl-0 pl-lg-0 col-lg-5">
+            <img src="{% static 'images/tasarım2.jpeg'%}" alt="Oyun Tasarımı" class="card-courses-img mg-fluid w-100 rounded" />
+          </div>
+          <div class="col">
+            <div class="card-info">
+              <div class="card-title fw-bold"><h4>Oyun Tasarımı ve Geliştirme</h4></div>
+              <div class="card-description">Oyun tasarımı temel prensipleri ve uygulamalı geliştirme teknikleri.</div>
+              <div class="card-teacher">Öğretmen: Mehmet Demir</div>
+              <div class="d-flex">
+                <div class="card-rating">Puan: 4.7</div>
+                <svg class="mx-2 my-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                  <path
+                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                  />
+                </svg>
+              </div>
+              <div class="card-price fw-bold">Fiyat: ₺89.99</div>
+              <button class="my-3" style="background-color: #5a78a6; border: none; color: white" 
+              {% if user.is_authenticated %}
+              onclick="window.location.href='{% url 'calender' %}'"
+              {% else %}
+              onclick="window.location.href='{% url 'login' %}'"
+              {% endif %}>Satın Al</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-courses shadow-sm mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-12 pl-0 pl-lg-0 col-lg-5">
+            <img src="{% static 'images/tasarım3.jpeg'%}" alt="İç Tasarım" class="card-courses-img mg-fluid w-100 rounded" />
+          </div>
+          <div class="col">
+            <div class="card-info">
+              <div class="card-title fw-bold"><h4>İç Tasarım Temelleri</h4></div>
+              <div class="card-description">Ev ve iş mekanlarınızı güzelleştirmenin yolları.</div>
+              <div class="card-teacher">Öğretmen: Gizem Yılmaz</div>
+              <div class="d-flex">
+                <div class="card-rating">Puan: 4.6</div>
+                <svg class="mx-2 my-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                  <path
+                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                  />
+                </svg>
+              </div>
+              <div class="card-price fw-bold">Fiyat: ₺79.99</div>
+              <button class="my-3" style="background-color: #5a78a6; border: none; color: white" 
+              {% if user.is_authenticated %}
+              onclick="window.location.href='{% url 'calender' %}'"
+              {% else %}
+              onclick="window.location.href='{% url 'login' %}'"
+              {% endif %}>Satın Al</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-courses shadow-sm mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-12 pl-0 pl-lg-0 col-lg-5">
+            <img src="{% static 'images/tasarım4.jpg'%}" alt="Mimarlık" class="card-courses-img mg-fluid w-100 rounded" />
+          </div>
+          <div class="col">
+            <div class="card-info">
+              <div class="card-title fw-bold"><h4>Mimarlık ve Şehir Planlama</h4></div>
+              <div class="card-description">Mimari tasarım ilkeleri ve kentsel planlama stratejileri.</div>
+              <div class="card-teacher">Öğretmen: Ali Yılmaz</div>
+              <div class="d-flex">
+                <div class="card-rating">Puan: 4.9</div>
+                <svg class="mx-2 my-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                  <path
+                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                  />
+                </svg>
+              </div>
+              <div class="card-price fw-bold">Fiyat: ₺109.99</div>
+              <button class="my-3" style="background-color: #5a78a6; border: none; color: white" 
+              {% if user.is_authenticated %}
+              onclick="window.location.href='{% url 'calender' %}'"
+              {% else %}
+              onclick="window.location.href='{% url 'login' %}'"
+              {% endif %}>Satın Al</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-courses shadow-sm mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-12 pl-0 pl-lg-0 col-lg-5"><img src="{% static 'images/tasarım5.jpeg'%}" alt="Moda Tasarımı" class="card-courses-img mg-fluid w-100 rounded" /></div>
+          <div class="col">
+            <div class="card-info">
+              <div class="card-title fw-bold"><h4>Moda Tasarımı ve Trendleri</h4></div>
+              <div class="card-description">Kendi modanızı yaratın ve trendleri yakalayın.</div>
+              <div class="card-teacher">Öğretmen: Elif Şahin</div>
+              <div class="d-flex">
+                <div class="card-rating">Puan: 4.9</div>
+                <svg class="mx-2 my-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                  <path
+                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                  />
+                </svg>
+              </div>
+              <div class="card-price fw-bold">Fiyat: ₺89.99</div>
+              <button class="my-3" style="background-color: #5a78a6; border: none; color: white" 
+              {% if user.is_authenticated %}
+              onclick="window.location.href='{% url 'calender' %}'"
+              {% else %}
+              onclick="window.location.href='{% url 'login' %}'"
+              {% endif %}>Satın Al</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {% include 'partials/_footer.html' %}
+
+    <!-- fiyatına göre sıralama -->
+    <script>
+      function sortCourses() {
+        var select = document.getElementById("select-sort");
+        var value = select.value;
+        var cardContainer = document.querySelector(".courses"); // Class adınızı düzeltin
+        var cards = Array.from(document.querySelectorAll(".card-courses"));
+        var title = document.querySelector(".courses-title"); // Başlık
+
+        // Başlık, sıralama işlemi başlamadan önce kartların içinde değilse, kartların başına ekleyin
+        if (!cardContainer.contains(title)) {
+          cardContainer.insertBefore(title, cardContainer.firstChild);
+        }
+
+        if (value === "priceHigh") {
+          cards.sort((a, b) => {
+            var priceA = parseFloat(a.querySelector(".card-price").innerText.replace("Fiyat: ₺", ""));
+            var priceB = parseFloat(b.querySelector(".card-price").innerText.replace("Fiyat: ₺", ""));
+            return priceB - priceA;
+          });
+        }
+
+        // Append sorted cards
+        cards.forEach((card) => {
+          cardContainer.appendChild(card);
+        });
+      }
+    </script>
+    <!-- puana göre sıralama -->
+    <script>
+      function sortCourses() {
+        var select = document.getElementById("select-sort");
+        var value = select.value;
+        var cardContainer = document.querySelector(".courses"); // Class adınızı düzeltin
+        var cards = Array.from(document.querySelectorAll(".card-courses"));
+        var title = document.querySelector(".courses-title"); // Başlık
+
+        // Başlık, sıralama işlemi başlamadan önce kartların içinde değilse, kartların başına ekleyin
+        if (!cardContainer.contains(title)) {
+          cardContainer.insertBefore(title, cardContainer.firstChild);
+        }
+
+        if (value === "priceHigh") {
+          cards.sort((a, b) => {
+            var priceA = parseFloat(a.querySelector(".card-price").innerText.replace("Fiyat: ₺", ""));
+            var priceB = parseFloat(b.querySelector(".card-price").innerText.replace("Fiyat: ₺", ""));
+            return priceB - priceA;
+          });
+        } else if (value === "ratingHigh") {
+          cards.sort((a, b) => {
+            var ratingA = parseFloat(a.querySelector(".card-rating").innerText.replace("Puan: ", ""));
+            var ratingB = parseFloat(b.querySelector(".card-rating").innerText.replace("Puan: ", ""));
+            return ratingB - ratingA;
+          });
+        }
+
+        // Append sorted cards
+        cards.forEach((card) => {
+          cardContainer.appendChild(card);
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,525 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+        }
+
+        /*smartbar*/
+        .left-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .date {
+            font: normal normal normal 14px/8px Rubik;
+        }
+
+        .welcome {
+            font: normal normal medium 18px/8px Rubik;
+            margin-top: -4px;
+        }
+
+        .smart-bar-text {
+            font: normal normal 19px/8px Rubik;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        /* Close button  */
+        #closeBtn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+            position: relative;
+            right: 10px;
+        }
+
+        #closeBtn:hover {
+            color: #cccccc;
+        }
+
+        @media only screen and (max-width: 1080px) {
+            .container-fluid {
+                display: none;
+            }
+        }
+
+        /* tüm kurslar  */
+        .card-courses {
+            border-radius: 15px;
+            width: 70%;
+            margin: 10px auto; /* Center horizontally */
+        }
+
+        .row-cols-md-2 > * {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        /* Additional styling for smaller screens */
+        @media (max-width: 767px) {
+            .courses-select {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .me-5 {
+                margin-bottom: 0; /* Başlık ile sütun arasındaki boşluğu kaldırır */
+            }
+
+            /* Seçim kutusunu daha dar yap */
+            #select-sort {
+                width: 150px;
+            }
+
+            /* Açılır menü seçeneklerini daha küçük yap */
+            #select-sort option {
+                font-size: 14px;
+            }
+        }
+
+        .sidebar {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 20px;
+        }
+
+        .sidebar label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .sidebar input,
+        .sidebar select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background-color: #5a78a6;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover {
+            background-color: #456192;
+        }
+
+    </style>
+
+    <style>
+        .card-image-container {
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+            position: relative;
+        }
+
+        .card-courses-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80%;
+            height: 80%;
+            object-fit: cover; /* Ensures the image covers the entire container */
+            border-radius: 10px; /* Add rounded corners if needed */
+        }
+    </style>
+
+
+</head>
+<body>
+{% include 'partials/_smartbar.html' %}
+{% if user.is_authenticated %}
+{% include 'partials/mainafternavbar.html' %}
+{% else %}
+{% include 'partials/mainnavbar.html' %}
+{% endif %}
+<br>
+<br>
+
+<div class="container mt-5">
+    <!-- Tabs navigation -->
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-meetings-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-meetings" type="button" role="tab" aria-controls="pills-meetings"
+                            aria-selected="true">Toplantılarım
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-courses-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-courses" type="button" role="tab" aria-controls="pills-courses"
+                            aria-selected="false">Kurslarım
+                    </button>
+                </li>
+                <li class="nav-item ms-auto" role="presentation">
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#addCourseModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-upload" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"></path>
+                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"></path>
+                        </svg>
+                        Kurs Ekle
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="pills-tabContent">
+                <!-- Meetings Tab -->
+                <div class="tab-pane fade show active" id="pills-meetings" role="tabpanel"
+                     aria-labelledby="pills-meetings-tab">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead class="table-dark">
+                            <tr>
+                                <th scope="col" style="white-space: nowrap;text-align:center">Tarih</th>
+                                <th scope="col" style="white-space: nowrap;text-align:center">Durum</th>
+                                <th scope="col" style="white-space: nowrap;text-align:center">Kurs Adı</th>
+                                <th scope="col" style="white-space: nowrap;text-align:center">Kursu Alan Öğrenci</th>
+                                <th scope="col" style="white-space: nowrap;text-align:center">Link</th>
+                                <th scope="col" style="white-space: nowrap;text-align:center">Ders Kaydı Link</th>
+                                <th scope="col" style="white-space: nowrap;text-align:center">Ayarlar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Example row -->
+                            {% for meeting_data in meetings_with_students %}
+                            <tr id="{{meeting_data.meeting.id}}" class="align-middle">
+                                {% if meeting_data.meeting.date %}
+                                <td style="text-align: center;white-space: nowrap">{{ meeting_data.meeting.date}}</td>
+                                {%else%}
+                                <td style="text-align: center;white-space: nowrap">Tarih Bulunmuyor</td>
+                                {% endif %}
+                                {% if meeting_data.meeting.status == 'WaitingInstructor' %}
+                                <td style="text-align: center">Görüşme Linki Bekleniyor</td>
+                                 {%elif value.0.status == 'Completed' %}
+                                <td style="text-align: center">Tamamlandı</td>
+                                {%else%}
+                                <td style="text-align: center">Görüşme Bekleniyor</td>
+                                {% endif %}
+                                <td style="white-space: nowrap;text-align:center">{{ meeting_data.course }}</td>
+                                <td style="white-space: nowrap;text-align:center">{{ meeting_data.student }}</td>
+                                <td style="white-space: nowrap;text-align:center">
+                                    {% if meeting_data.meeting.url %}
+                                    <a type="button" class="btn btn-primary btn-sm" href="{{ meeting_data.meeting.url }}" target="_blank">Toplantı Linki</a>
+                                    {% else %}
+                                    <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                        Eklenmedi
+                                    </button>
+                                    {% endif %}
+                                </td>
+                                <td style="white-space: nowrap;text-align:center">
+                                    {% if meeting_data.meeting.video_url %}
+                                    <a type="button" class="btn btn-primary btn-sm" href="{{ meeting_data.meeting.video_url }}" target="_blank">Kayıt Linki</a>
+                                    {% else %}
+                                    <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                        Yüklenmedi
+                                    </button>
+                                    {% endif %}
+                                </td>
+
+                                <td style=text-align:center">
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic outlined example">
+                                      <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#setUrlModal"
+                                            onclick="setMeetingId({{ meeting_data.meeting.id }})">Link Ekle</button><br>
+                                      <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#setVideoUrlModal"
+                                            onclick="setMeetingIdForVideo({{ meeting_data.meeting.id }})">Kayıt Ekle</button>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <!-- Additional rows go here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Modal for setting the URL and date-time -->
+                <div class="modal fade" id="setUrlModal" tabindex="-1" aria-labelledby="setUrlModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="setUrlModalLabel">Toplantının Tarih ve Linkleri</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="setUrlForm" method="POST" action="{% url 'set_meeting_url' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="meeting_id" id="meetingIdInput">
+                                    <div class="mb-3">
+                                        <label for="meetingUrlInput" class="form-label">Toplantı Linki</label>
+                                        <input type="url" class="form-control" id="meetingUrlInput" name="meeting_url"
+                                               required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="meetingDateTimeInput" class="form-label">Toplantı Tarih-Saat</label>
+                                        <input type="datetime-local" class="form-control" id="meetingDateTimeInput"
+                                               name="meeting_date_time" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal for setting the URL and date-time -->
+                <div class="modal fade" id="setVideoUrlModal" tabindex="-1" aria-labelledby="setUrlModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Toplantı Kaydı Ekle</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="setVideoUrlForm" method="POST" action="{% url 'set_video_url' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="meeting_id_video" id="meetingIdInputField">
+                                    <div class="mb-3">
+                                        <label for="meetingVideoUrlInput" class="form-label">Ders Kayıt Videosu
+                                            Linki</label>
+                                        <input type="url" class="form-control" id="meetingVideoUrlInput"
+                                               name="meeting_video_url">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <script>
+                    function setMeetingId(meetingId) {
+                        document.getElementById('meetingIdInput').value = meetingId;
+                    }
+                     function setMeetingIdForVideo(meetingId) {
+                        document.getElementById('meetingIdInputField').value = meetingId;
+                    }
+                </script>
+
+                <!-- Courses Tab -->
+                <div class="tab-pane fade" id="pills-courses" role="tabpanel" aria-labelledby="pills-courses-tab">
+                    <div class="row">
+                        <!-- Example course card  insert for loop here -->
+                        {% for course in courses %}
+                        <div class="card-courses mb-4">
+                            <div class="row align-items-left">
+                                <div class="col-md-5 col-lg-5">
+                                    <div class="card-image-container">
+                                        <img src="../{{ course.image_path }}" data-was-processed="true"
+                                             class="card-courses-img"/>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card-info">
+                                        <div class="card-title fw-bold">
+                                            <h4>{{ course.name }}</h4>
+                                        </div>
+                                        <div class="card-description">{{ course.details }}</div>
+                                        <div class="card-teacher">Öğretmen: {{ course.instructor.user.username }}</div>
+                                        <div class="d-flex">
+                                            <div class="card-rating">Puan: {{ course.rating }}</div>
+                                            <svg class="mx-2 my-1" xmlns="http://www.w3.org/2000/svg"
+                                                 viewBox="0 0 576 512" width="12" height="12" fill="#FFAF61">
+                                                <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="card-price fw-bold">Fiyat: ₺{{ course.price }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+
+                        <!-- Additional course cards go here -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/add_new_course/" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCourseModalLabel">Add New Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="courseName" class="form-label">Course Name</label>
+                        <input type="text" class="form-control" id="courseName" name="courseName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseDetails" class="form-label">Details</label>
+                        <textarea class="form-control" id="courseDetails" name="courseDetails" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseRating" class="form-label">Rating</label>
+                        <input type="number" class="form-control" id="courseRating" name="courseRating" min="1" max="5"
+                               required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="coursePrice" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="coursePrice" name="coursePrice" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseCategory" class="form-label">Category</label>
+                        <select class="form-select" id="courseCategory" name="courseCategory" required>
+                            <option value="">Select Category</option>
+                            {% for category in categories %}
+                            <option value="{{category.id}}">{{category.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseImage" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="courseImage" name="courseImage" accept="image/*"
+                               required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+
+
+{% include 'partials/_footer.html' %}
+
+{% if target_meeting %}
+    <script>
+        window.location.href = "#{{target_meeting}}";
+        document.getElementById("{{target_meeting}}").classList.add('table-success');
+    </script>
+{%endif%}
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+<!-- smartbar script -->
+<script>
+    document.getElementById('closeBtn').addEventListener('click', function () {
+        document.querySelector('.smartbar').style.display = 'none'
+    })
+</script>
+<script>
+    // Filtreleme işlevi
+    function filterCourses() {
+        var priceInput = document.getElementById('course-price').value
+        var ratingSelect = document.getElementById('course-rating').value
+        var cards = document.querySelectorAll('.card-courses')
+
+        cards.forEach(function (card) {
+            var price = parseFloat(card.querySelector('.card-price').innerText.replace('Fiyat: ₺', ''))
+            var rating = parseFloat(card.querySelector('.card-rating').innerText.replace('Puan: ', ''))
+            var isVisible = true
+
+            // Fiyat kontrolü
+            if (price > priceInput) {
+                isVisible = false
+            }
+
+            // Puan kontrolü
+            if (rating < ratingSelect) {
+                isVisible = false
+            }
+
+            // Kart görünürlüğünü ayarla
+            if (isVisible) {
+                card.style.display = 'block'
+            } else {
+                card.style.display = 'none'
+            }
+        })
+    }
+
+    // Filtreleme düğmesine tıklanınca filtreleme işlevini çağır
+    document.querySelector('.filter-btn').addEventListener('click', filterCourses)
+
+    function sortCourses() {
+        var select = document.getElementById('select-sort')
+        var value = select.value
+        var cardContainer = document.querySelector('.courses') // Class adınızı düzeltin
+        var cards = Array.from(document.querySelectorAll('.card-courses'))
+        var title = document.querySelector('.courses-title') // Başlık
+
+        // Başlık, sıralama işlemi başlamadan önce kartların içinde değilse, kartların başına
+        if (!cardContainer.contains(title)) {
+            cardContainer.insertBefore(title, cardContainer.firstChild)
+        }
+
+        if (value === 'priceHigh') {
+            cards.sort((a, b) => {
+                var priceA = parseFloat(a.querySelector('.card-price').innerText.replace('Fiyat: ₺', ''))
+                var priceB = parseFloat(b.querySelector('.card-price').innerText.replace('Fiyat: ₺', ''))
+                return priceB - priceA
+            })
+        } else if (value === 'ratingHigh') {
+            cards.sort((a, b) => {
+                var ratingA = parseFloat(a.querySelector('.card-rating').innerText.replace('Puan: ', ''))
+                var ratingB = parseFloat(b.querySelector('.card-rating').innerText.replace('Puan: ', ''))
+                return ratingB - ratingA
+            })
+        }
+
+        // Append sorted cards
+        cards.forEach((card) => {
+            cardContainer.appendChild(card)
+        })
+    }
+
+    // Ensure sortCourses() is called when select element changes
+    document.getElementById('select-sort').addEventListener('change', sortCourses)
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</body>
+</html>

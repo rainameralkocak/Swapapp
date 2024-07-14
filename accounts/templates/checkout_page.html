@@ -1,0 +1,882 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Calendar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .credit-card-container {
+            width: 150%;
+            height: 180px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4c4c4c, #1c1c1c);
+            color: white;
+            padding: 15px; /* Değişiklik burada */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            transition: transform 1s;
+            transform-style: preserve-3d;
+            position: relative;
+            /* margin: 0 -26%; */
+        }
+
+        .credit-card-container:hover {
+            transform: rotateY(180deg);
+        }
+
+        .credit-card-container.flip-to-back {
+            transform: rotateY(180deg);
+        }
+
+        .credit-card-front,
+        .credit-card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+        .credit-card-front {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .credit-card-back {
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .credit-card-chip {
+            width: 14%;
+            height: 1.8rem;
+            background-color: #d4af37;
+            border-radius: 4px;
+            margin-bottom: 7%;
+            margin-top: 9%;
+            margin-left: 5%;
+        }
+
+        .credit-card-number {
+            margin-top: -6%;
+            font-size: 2rem;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .credit-card-holder {
+            display: inline-block;
+            font-size: 0.7rem;
+            position: absolute;
+            left: 15%;
+            bottom: 20%;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
+        .credit-card-expiry {
+            position: absolute;
+            right: 14%;
+            bottom: 20%;
+            font-size: 0.7em;
+            white-space: nowrap;
+        }
+
+        .calendar {
+            width: 100%;
+            max-width: 1000px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header button {
+            background: #add8e6; /* Pastel light blue */
+            border: none;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .calendar-header button:hover {
+            background: #87ceeb; /* Darker pastel blue */
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .calendar-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            position: relative;
+        }
+
+        .day {
+            padding: 10px;
+            background: #f0f2f5;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .day:hover {
+            background: #e0e0e0;
+        }
+
+        .day.busy {
+            background: #f28b82;
+            cursor: not-allowed;
+        }
+
+        .day.available {
+            background: #81c995;
+        }
+
+        .day-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 300px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        .popup h3 {
+            margin-top: 0;
+        }
+
+        .popup ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .popup ul li {
+            padding: 10px;
+            background: #f0f2f5;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .popup ul li:hover {
+            background: #e0e0e0;
+        }
+
+        .popup .close-btn {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+        }
+
+        @keyframes slideOutLeft {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-out-left {
+            animation: slideOutLeft 0.5s forwards;
+        }
+
+        .slide-out-right {
+            animation: slideOutRight 0.5s forwards;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.5s forwards;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.5s forwards;
+        }
+
+        .btn-custom {
+            background-color: #5a78a6;
+            border: none;
+            color: white;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px; /* Optional: for rounded corners */
+        }
+
+        .btn-custom:hover {
+            background-color: #476a93; /* Optional: darker color on hover */
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                type="button" role="tab" aria-controls="pills-home" aria-selected="true">Kurs Bilgileri
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact"
+                type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Ödeme
+        </button>
+    </li>
+</ul>
+
+
+{% if messages %}
+<div class="messages alert alert-danger">
+    {% for message in messages %}
+    <h5 {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</h5>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+<div class="card">
+    <div class="card-body">
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+                <div class="card-courses shadow-sm mb-auto">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 pl-0 pl-lg-0 col-lg-5">
+                            <img src="{{course.image_path}}" data-src="office1.jpg" data-was-processed="true" alt=""
+                                 class="card-courses-img mg-fluid w-100 rounded"/>
+                        </div>
+                        <div class="col">
+                            <div class="card-info">
+                                <div class="card-title fw-bold">
+                                    <h4>{{ course.name }}</h4>
+                                </div>
+                                <div class="card-description">{{ course.details }}</div>
+                                <div class="card-teacher">Öğretmen: {{ course.instructor.user.username }}</div>
+                                <div class="d-flex">
+                                    <div class="card-rating">Puan: {{ course.rating }}</div>
+                                    <svg class="mx-2 my-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                         width="12" height="12" fill="#FFAF61">
+                                        <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"/>
+                                    </svg>
+                                </div>
+                                <div class="card-price fw-bold">Fiyat: {{ course.price }}</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab"
+                 aria-disabled="true">
+                <div id="yeniOdeme" class="tab-content">
+                    <div class="container my-4 py-3 w-75" style="box-shadow: 0 0 5px rgba(0, 0, 0, 0.1)">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 d-flex justify-content-center">
+                                <div class="credit-card-container col-lg-12 col-xl-10">
+                                    <div class="credit-card-front">
+                                        <div class="credit-card-chip"></div>
+                                        <div class="credit-card-number">•••• •••• •••• ••••</div>
+                                        <div class="credit-card-holder">YOUR NAME</div>
+                                        <div class="credit-card-expiry">MM/YY</div>
+                                    </div>
+                                    <div class="credit-card-back">
+                                        <div class="black-bar"></div>
+                                        <div class="credit-card-chip2"></div>
+                                        <div class="white-bar"></div>
+                                        <div class="credit-card-cvc">•••</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form id="payment-form" class="payment-form mt-4 col-10 mx-auto"
+                                  action="/checkout/{{course.id}}" method="POST">
+                                <div class="row justify-content-center">
+                                    <div class="col-12 col-sm-6 col-md-5 mb-3">
+                                        <div class="form-group">
+                                            <label for="credit-card-number">Kart Numarası</label>
+                                            <input name=card_number type="text" class="form-control"
+                                                   id="credit-card-number" maxlength="19" required/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-5 mb-3">
+                                        <div class="form-group">
+                                            <label for="credit-card-holder">Kart Sahibi</label>
+                                            <input name=card_owner type="text" class="form-control"
+                                                   id="credit-card-holder" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-12 col-sm-6 col-md-5 mb-3">
+                                        <div class="form-group">
+                                            <label for="credit-card-expiry">Valid Thru</label>
+                                            <input name=card_expiry type="text" class="form-control"
+                                                   id="credit-card-expiry" maxlength="5" required/>
+                                            <p id="expiry-error" style="color: red; display: none">Son kullanma tarihi
+                                                12'den büyük olamaz!</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-5 mb-3">
+                                        <div class="form-group">
+                                            <label for="credit-card-cvc">Kartı CVC2</label>
+                                            <input name=card_cvc type="text" class="form-control" id="credit-card-cvc"
+                                                   maxlength="3" minlength="3" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <br>
+                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                <input type="hidden" name="instructor_id" value="{{ course.instructor.id }}">
+                                <input type="hidden" name="meeting_date" value="" id="meeting_date">
+                                <div class="row justify-content-evenly">
+                                    <div class="col-5">
+                                        <select class="form-select" id="inputGroupSelect02">
+                                            <option selected>Kayıtlı Kartlar</option>
+                                            {% for card in cards%}
+                                            <option value="{{ card.id }}" data-name="{{ card.user.first_name }} {{card.user.last_name}}" data-cvc="{{card.cvv}}" data-expiry="{{card.expiry}}">{{card.card_name}} **** 4444</option>
+                                            {%endfor%}
+                                        </select>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="form-check">
+                                            <input style="margin-top: 10px" class="form-check-input" type="checkbox"
+                                                   value=""
+                                                   id="flexCheckChecked" checked>
+                                            <label class="form-check-label" style="margin-top: 7px"
+                                                   for="flexCheckChecked">
+                                                Kartımı Kaydet
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </form>
+
+                            <div class="credit-card-button row col-lg-10 d-flex justify-content-center mx-auto">
+                                <button type="submit" form="payment-form" class="border-none my-3 col-lg-5"
+                                        style="background-color: #5a78a6; border: none; color: white; padding: 10px">
+                                    Ödeme Yap
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<div class="popup" id="popup">
+    <button class="close-btn" id="closePopup">X</button>
+    <h3>Select Time Slot</h3>
+    <ul id="timeSlots">
+        <!-- Time slots will be dynamically added here -->
+    </ul>
+</div>
+
+<script>
+    const selectElement = document.getElementById('inputGroupSelect02');
+
+    selectElement.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+
+         if (selectedOption.value) { // Ensure an actual card is selected
+            const id = selectedOption.value;
+            const name = selectedOption.getAttribute('data-name');
+            const cvc = selectedOption.getAttribute('data-cvc');
+            const expiry = selectedOption.getAttribute('data-expiry');
+
+            document.getElementById("credit-card-number").value = "1111 2222 3333 4444"; // Example card number
+            document.getElementById("credit-card-holder").value = name;
+            document.getElementById("credit-card-expiry").value = expiry;
+            document.getElementById("credit-card-cvc").value = cvc;
+        }
+    });
+
+
+
+</script>
+
+<script>
+    const busyDays = [3, 5, 10, 15]; // Instructor's busy days
+    const availableDays = [2, 4, 6, 7, 11, 14, 16, 28]; // Instructor's available days
+    const timeSlots = ["09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00", "13:00 - 14:00", "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00"];
+
+    let today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+
+    const monthYear = document.getElementById("monthYear");
+    const calendarBody = document.getElementById("calendarBody");
+    const popup = document.getElementById("popup");
+    const timeSlotsList = document.getElementById("timeSlots");
+    const closePopup = document.getElementById("closePopup");
+
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    function renderCalendar(month, year) {
+        calendarBody.innerHTML = `
+                <div class="day-header">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
+            `;
+        monthYear.textContent = `${months[month]} ${year}`;
+        const firstDay = new Date(year, month).getDay();
+        const daysInMonth = 32 - new Date(year, month, 32).getDate();
+
+        for (let i = 0; i < firstDay; i++) {
+            const emptyCell = document.createElement("div");
+            calendarBody.appendChild(emptyCell);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayCell = document.createElement("div");
+            dayCell.textContent = day;
+            dayCell.classList.add("day");
+
+            if (busyDays.includes(day)) {
+                dayCell.classList.add("busy");
+            } else if (availableDays.includes(day)) {
+                dayCell.classList.add("available");
+                dayCell.addEventListener("click", () => openPopup(day));
+            }
+
+            calendarBody.appendChild(dayCell);
+        }
+    }
+
+    function openPopup(day) {
+        popup.style.display = "block";
+        timeSlotsList.innerHTML = "";
+        timeSlots.forEach((slot) => {
+            const li = document.createElement("li");
+            li.textContent = slot;
+            li.addEventListener("click", () => {
+                selectTimeSlot(day, slot);
+                document.getElementById("meeting_date").value = `${currentYear}-${currentMonth}-${day} ${slot.split("-")[0].slice(0,-1)}`;
+            });
+            timeSlotsList.appendChild(li);
+        });
+    }
+
+    function selectTimeSlot(day, slot) {
+        alert(`You selected ${slot} on ${months[currentMonth]} ${day}, ${currentYear}`);
+        closePopupFn();
+    }
+
+    function closePopupFn() {
+        popup.style.display = "none";
+    }
+
+    document.getElementById("prevMonth").addEventListener("click", () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        animateCalendar("right", () => renderCalendar(currentMonth, currentYear));
+    });
+
+    document.getElementById("nextMonth").addEventListener("click", () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        animateCalendar("left", () => renderCalendar(currentMonth, currentYear));
+    });
+
+    closePopup.addEventListener("click", closePopupFn);
+
+    function animateCalendar(direction, callback) {
+        const days = Array.from(document.querySelectorAll(".day"));
+        const numColumns = 7;
+        let delay = 0;
+
+        // Slide out old columns
+        for (let i = 0; i < numColumns; i++) {
+            const columnDays = days.filter((_, index) => index % numColumns === i);
+            columnDays.forEach((day) => {
+                setTimeout(() => {
+                    day.classList.add(direction === "left" ? "slide-out-right" : "slide-out-left");
+                }, delay);
+            });
+            delay += 100;
+        }
+
+        setTimeout(() => {
+            callback();
+            const newDays = Array.from(document.querySelectorAll(".day"));
+            delay = 0;
+
+            // Slide in new columns
+            for (let i = 0; i < numColumns; i++) {
+                const columnDays = newDays.filter((_, index) => index % numColumns === i);
+                columnDays.forEach((day) => {
+                    day.classList.add(direction === "left" ? "slide-in-left" : "slide-in-right");
+                    setTimeout(() => {
+                        day.classList.remove("slide-in-left", "slide-in-right");
+                    }, delay + 500);
+                });
+                delay += 100;
+            }
+        }, numColumns * 100 + 500); // ensure all columns have animated out before calling callback
+    }
+
+    renderCalendar(currentMonth, currentYear);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+<script>
+    var cardToBeDeleted = null
+
+    function openTab(evt, tabName) {
+        var i, tabContent, tabLinks
+        tabContent = document.getElementsByClassName('tab-content')
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = 'none'
+        }
+        tabLinks = document.getElementsByClassName('tab-link')
+        for (i = 0; i < tabLinks.length; i++) {
+            tabLinks[i].className = tabLinks[i].className.replace(' active', '')
+        }
+        document.getElementById(tabName).style.display = 'block'
+        evt.currentTarget.className += ' active'
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('.tab-link').click()
+        document.querySelectorAll('.edit-link').forEach((link) => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault()
+                document.getElementById('editModal').style.display = 'block'
+                cardToBeDeleted = event.target.closest('.registered-card')
+            })
+        })
+    })
+
+    function updateCardName() {
+        alert('Kart Adı Güncellendi')
+        document.getElementById('editModal').style.display = 'none'
+    }
+
+    function deleteCard() {
+        if (cardToBeDeleted) {
+            cardToBeDeleted.remove()
+            cardToBeDeleted = null
+            alert('Kart Silindi')
+        } else {
+            alert('Silinecek kart bulunamadı.')
+        }
+        document.getElementById('editModal').style.display = 'none'
+    }
+
+    var modal = document.getElementById('editModal')
+    var span = document.getElementsByClassName('close')[0]
+    span.onclick = function () {
+        modal.style.display = 'none'
+    }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none'
+        }
+    }
+</script>
+<!-- kart adını güncelle -->
+<script>
+    function updateCardName() {
+        // Yeni kart adını al
+        var newCardName = document.getElementById('cardName').value
+
+        // Kart adını güncelle (örneğin, span etiketinin içine yerleştir)
+        if (cardToBeDeleted) {
+            cardToBeDeleted.querySelector('.registered-card-header span').textContent = newCardName
+        }
+
+        // Kullanıcıya güncelleme işleminin başarılı olduğunu bildir
+        alert('Kart Adı Güncellendi')
+
+        // Modalı kapat
+        document.getElementById('editModal').style.display = 'none'
+    }
+</script>
+<!-- kartı silme -->
+<script>
+    function deleteCard() {
+        if (cardToBeDeleted) {
+            cardToBeDeleted.remove()
+            cardToBeDeleted = null
+            alert('Kart Silindi')
+        } else {
+            alert('Silinecek kart bulunamadı.')
+        }
+        document.getElementById('editModal').style.display = 'none'
+    }
+</script>
+<script>
+    var cardToBeDeleted = null
+
+    function openTab(evt, tabName) {
+        var i, tabContent, tabLinks
+        tabContent = document.getElementsByClassName('tab-content')
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = 'none'
+        }
+        tabLinks = document.getElementsByClassName('tab-link')
+        for (i = 0; i < tabLinks.length; i++) {
+            tabLinks[i].className = tabLinks[i].className.replace(' active', '')
+        }
+        document.getElementById(tabName).style.display = 'block'
+        evt.currentTarget.className += ' active'
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('.tab-link').click()
+        document.querySelectorAll('.edit-link').forEach((link) => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault()
+                document.getElementById('editModal').style.display = 'block'
+                cardToBeDeleted = event.target.closest('.registered-card')
+            })
+        })
+    })
+
+    function updateCardName() {
+        alert('Kart Adı Güncellendi')
+        document.getElementById('editModal').style.display = 'none'
+    }
+
+    function deleteCard() {
+        if (cardToBeDeleted) {
+            cardToBeDeleted.remove()
+            cardToBeDeleted = null
+            alert('Kart Silindi')
+        } else {
+            alert('Silinecek kart bulunamadı.')
+        }
+        document.getElementById('editModal').style.display = 'none'
+    }
+
+    var modal = document.getElementById('editModal')
+    var span = document.getElementsByClassName('close')[0]
+    span.onclick = function () {
+        modal.style.display = 'none'
+    }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none'
+        }
+    }
+</script>
+<!-- YENİ ÖDEME -->
+<script>
+    document.getElementById('credit-card-number').addEventListener('input', function () {
+        let cardNumber = this.value
+            .replace(/\D/g, '')
+            .slice(0, 16)
+            .replace(/(.{4})/g, '$1 ')
+            .trim()
+
+        this.value = cardNumber
+        document.querySelector('.credit-card-number').textContent = cardNumber || '•••• •••• •••• ••••'
+    })
+
+    document.getElementById('credit-card-number').addEventListener('keypress', function (e) {
+        if (!/\d/.test(e.key)) {
+            e.preventDefault()
+        }
+    })
+</script>
+<script>
+    document.getElementById('credit-card-holder').addEventListener('input', function () {
+        let holderName = this.value.replace(/[^a-zA-ZçğıöşüÇĞİÖŞÜ\s]/g, '') || 'YOUR NAME'
+        let cardHolderElement = document.querySelector('.credit-card-holder')
+
+        let nameWidth = cardHolderElement.offsetWidth
+        let cardInnerWidth = document.querySelector('.credit-card-front').offsetWidth
+
+        if (nameWidth > cardInnerWidth) {
+            cardHolderElement.style.width = cardInnerWidth + 'px'
+            cardHolderElement.style.overflow = 'hidden'
+        } else {
+            cardHolderElement.style.width = 'auto'
+            cardHolderElement.style.overflow = 'visible'
+        }
+
+        cardHolderElement.textContent = holderName
+    })
+
+    document.getElementById('credit-card-holder').addEventListener('keypress', function (e) {
+        if (!/[a-zA-ZçğıöşüÇĞİÖŞÜ\s]/.test(e.key)) {
+            e.preventDefault()
+        }
+    })
+</script>
+<script>
+    document.getElementById('credit-card-expiry').addEventListener('input', function (e) {
+        let inputValue = e.data
+        if (inputValue && isNaN(parseInt(inputValue))) {
+            // Eğer giriş verisi bir rakam değilse, girişten çık
+            this.value = this.value.slice(0, -1)
+            return
+        }
+
+        // Girişten sadece rakamları al ve maksimum uzunluk 4'e ayarla
+        let expiry = this.value.replace(/\D/g, '').slice(0, 4)
+
+        // Tarihi MM/YY formatına getir
+        if (expiry.length > 2) {
+            expiry = expiry.slice(0, 2) + '/' + expiry.slice(2)
+        }
+
+        this.value = expiry
+
+        // Eğer sadece ilk 2 rakam girildiyse ve '/' yoksa, ekle
+        if (expiry.length === 2 && !expiry.includes('/')) {
+            this.value = expiry + '/'
+            this.setSelectionRange(3, 3) // Seçim aralığını ayarla
+        }
+
+        // Ayı çıkarma işlemi
+        let month = parseInt(expiry.slice(0, 2))
+        if (month > 12) {
+            // Eğer ay 12'den büyükse, hata mesajını göster
+            document.getElementById('expiry-error').style.display = 'block'
+            this.value = expiry.slice(0, 1) // İlk rakamı koru, diğerlerini sil
+            document.querySelector('.credit-card-expiry').textContent = 'MM/YY'
+        } else {
+            // Geçerli ayı göster
+            document.getElementById('expiry-error').style.display = 'none'
+            document.querySelector('.credit-card-expiry').textContent = expiry || 'MM/YY'
+        }
+    })
+</script>
+<script>
+    document.getElementById('credit-card-cvc').addEventListener('input', function () {
+        let cvc = this.value.replace(/\D/g, '').slice(0, 3)
+        this.value = cvc
+        document.querySelector('.credit-card-cvc').textContent = cvc || '•••'
+
+        document.querySelector('.credit-credit-card-container').classList.add('flip-to-back')
+    })
+
+    document.getElementById('credit-card-cvc').addEventListener('focus', function () {
+        document.querySelector('.credit-card-container').classList.add('flip-to-back')
+    })
+
+    document.getElementById('credit-card-cvc').addEventListener('blur', function () {
+        document.querySelector('.credit-card-container').classList.remove('flip-to-back')
+    })
+</script>
+
+
+</body>
+</html>
+
+

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Success Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            text-align: center;
+            padding: 50px;
+        }
+        .icon {
+            color: #28a745; /* Green color */
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .info {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="icon">
+        <div class="text-center">
+            <img src="../../static/images/success.png" class="rounded" alt="...">
+</div>
+    </div>
+    <div class="message">
+        <p>Kursa başarıyla kaydoldunuz</p>
+    </div>
+    <div class="info">
+        <p>Information from the previous page:</p>
+        <p>{{ information }}</p>
+
+        <a class="my-3" style="background-color: #5a78a6; border: none; color: white; display: inline-block; padding: 10px 20px; text-align: center; text-decoration: none;"
+              href="/">
+              Ana Sayfaya Dön
+              </a>
+
+
+    </div>
+</body>
+</html>

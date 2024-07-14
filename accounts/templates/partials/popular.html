@@ -1,0 +1,25 @@
+{% load static %}
+
+<section class="popular d-flex justify-content-center align-items-center">
+  <div class="container col-md-12">
+    <div class="PopularTitle col-lg-4 justify-content-start mt-5 mb-5"><p>Popüler Kategoriler</p></div>
+    <div class="PopularBox">
+      <div class="row justify-content-center">
+        {% for category in categories %}
+          <div class="PopularBoxItem col-lg-3 col-md-6 col-sm-12">
+          <a href="category/{{category.id}}">
+            <button class="PopularBoxImg">
+              <img src="{{ category.image_path }}" alt="popularimg 2" />
+            </button>
+            <button>
+              <span class="ud-heading-md ud-focus-visible-target fw-bold my-1 fs-7">{{category.name}}</span>
+            </button>
+          </a>
+        </div>
+
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</section>

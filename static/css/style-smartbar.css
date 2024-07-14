@@ -1,0 +1,43 @@
+body {
+    font-family: "Rubik", sans-serif;
+  }
+  /*smartbar*/
+  .left-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .date {
+    font: normal normal normal 14px/8px Rubik;
+  }
+  
+  .welcome {
+    font: normal normal medium 18px/8px Rubik;
+    margin-top: -4px;
+  }
+  
+  .smart-bar-text {
+    font: normal normal 19px/8px Rubik;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  /* Close button style */
+  #closeBtn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    position: relative;
+    right: 10px; /* Adjust as needed */
+  }
+  
+  #closeBtn:hover {
+    color: #cccccc;
+  }
+  
+  @media only screen and (max-width: 1080px) {
+    .container-fluid {
+      display: none;
+    }
+  }

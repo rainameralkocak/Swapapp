@@ -1,0 +1,9 @@
+{% autoescape off %}
+Merhaba {{ user.username }},
+
+Hesabınızı aktif etmek için aşağıdaki bağlantıya tıklayın:
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+Teşekkürler,
+SWAP Ekibi
+{% endautoescape %}

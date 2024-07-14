@@ -1,0 +1,70 @@
+{% load static %}
+{% load date_tag %}
+
+<style>
+  body {
+    font-family: 'Rubik', sans-serif;
+  }
+  /*smartbar*/
+  .left-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .date {
+    font: normal normal normal 14px/8px Rubik;
+  }
+  
+  .welcome {
+    font: normal normal medium 18px/8px Rubik;
+    margin-top: -4px;
+  }
+  
+  .smart-bar-text {
+    font: normal normal 19px/8px Rubik;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  /* Close button style */
+  #closeBtn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    position: relative;
+    right: 10px; /* Adjust as needed */
+  }
+  
+  #closeBtn:hover {
+    color: #cccccc;
+  }
+  
+  @media only screen and (max-width: 1080px) {
+    .container-fluid {
+      display: none;
+    }
+  }
+</style>
+<section class="smartbar container-fluid">
+  <div class="row topnavjs" style="background-color: #1d1d1b; height: 35px">
+    <div class="offset-xl-1 col-xl-3 col-lg-3 col-md-3 px-0 my-auto" style="background-color: #1d1d1b">
+      <div class="left-content text-white">
+        <div class="date" id="date" style="font-size: 1.0em;">{% formatted_date %}</div>
+        <div class="welcome" style="font-size: 1.0em;">&nbsp;|&nbsp;SWAP'A Hoş Geldiniz</div>
+      </div>
+    </div>
+    <div class="col-xl-7 col-lg-7 col-md-7 my-auto">
+      <ul class="list-group list-group-horizontal list-unstyled float-end align-items-center">
+        <a class="smart-bar-text text-bold ud-text-with-links me-5" onclick="window.location.href='login';" style="font-size: 1.0em;">Değişime var mısın?</a>
+        <button id="closeBtn"><i class="fas fa-times"></i></button>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('closeBtn').addEventListener('click', function () {
+    document.querySelector('.smartbar').style.display = 'none'
+  })
+</script>
